@@ -16,7 +16,10 @@ class Migrations{
             ) 
         ",
 
-        'add_password_alumnos' => "ALTER TABLE `alumnos` ADD `PASSWORD` VARCHAR(100) NULL DEFAULT NULL AFTER `CODIGOPOSTAL`; "
+        'mod_alumnos_table' => "ALTER TABLE `alumnos` 
+        ADD `mail_token` VARCHAR(150) NULL DEFAULT NULL AFTER `CODIGOPOSTAL`, 
+        ADD `verified` INT NOT NULL DEFAULT '0' AFTER `mail_token`, 
+        ADD `password` VARCHAR(100) NULL AFTER `verified`;",
     ]; 
     
 }    

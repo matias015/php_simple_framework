@@ -7,20 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Login</h1>
-
-    <form method="POST" action="/login">
-        email <input name="email">
-        contraseña <input name="password">
+    <form method="POST" action="/email-verify">
+        <input name='user_token'>
         <?php include_once('Fw/Csrf.php') ?>
-        <input type="submit" value="Ingresar">
     </form>
-
-    <a href="/registro">registrarme</a>
-
-    <br><br>
-
-    <?php include_once('App/Views/Componentes/mensajes.php') ?>
-
 </body>
 </html>

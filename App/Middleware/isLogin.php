@@ -2,7 +2,7 @@
 class isLogin{
 
     static function check(){
-        if(!Auth::is_login()){
+        if(!Auth::isLogin()){
             Request::redirect('/login');
             return false;
         }

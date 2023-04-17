@@ -12,14 +12,13 @@
     <form method="POST" action="/registro">
         email <input name="email">
         contraseña <input name="password">
+        <?php include_once('Fw/Csrf.php') ?>
         <input type="submit" value="Crear cuenta">
     </form>
 
     <br><br>
 
-    <?php
-        if(Session::exists('mensaje')) echo '<p>'. Session::getAndDelete('mensaje') .'</p>';
-    ?>
+    <?php include_once('App/Views/Componentes/mensajes.php') ?>
     
 </body>
 </html>

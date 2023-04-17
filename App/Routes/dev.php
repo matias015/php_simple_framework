@@ -4,6 +4,10 @@ Route::get('/mig', function(){
     include_once('Migrations/Migrations.php');
 });
 
-Route::get('/test', function(){
-    var_dump(Request::bcrypt(123));
+include_once('App/Models/Alumno.php');
+
+
+Route::get('/test',function(){
+    print_r(Alumno::inscribibles(616));
+    
 });

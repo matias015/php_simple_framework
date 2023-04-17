@@ -7,27 +7,28 @@ class Auth extends DB{
     static $usersTable = AUTH_TABLE_NAME;
     static $tokensTable = AUTH_TABLE_TOKENS_NAME;
     static $token_duration_time = COOKIE_EXPIRATION_TIME;
+    static $authIdField = AUTH_ID_NAME;
 
     static $user;
 
     static function start(){
         session_start();
-        
         if(!Auth::isLogin()){
             Auth::loginWithCookie();
         }
     }
 
     static function login($user, $remember=false) {
-        $_SESSION['user_id'] = $user['id'];
-
+        $_SESSION['user_id'] = $user[Auth::$authIdField];
+        $_SESSION['logged_at'] = time();
+        echo $user[Auth::$authIdField];
         if ($remember) {
             $tokensTable = Auth::$tokensTable;
             $token_duration_time = date('Y-m-d', strtotime(COOKIE_EXPIRATION_TIME));
 
             $token = bin2hex(random_bytes(16));
-            DB::query("INSERT INTO $tokensTable VALUES(NULL, ?,?,?)",[$user['id'], hash('sha256', $token),$token_duration_time],false);
-            setcookie('user_token', $token, time()+$token_duration_time, '/', '', true, true);
+            DB::query("INSERT INTO $tokensTable VALUES(NULL, ?,?,?)",[$user[Auth::$authIdField], hash('sha256', $token),$token_duration_time],false);
+            setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
         }
 
         Auth::$user = $user;
@@ -45,8 +46,8 @@ class Auth extends DB{
             $token = hash('sha256', $_COOKIE['user_token']);
 
             $usersTable = Auth::$usersTable;
-
-            $user = DB::queryFirst("SELECT * FROM $usersTable,$tokensTable WHERE $tokensTable.user_id = $usersTable.id AND token = ?", [$token],false);
+            $idField = Auth::$authIdField;
+            $user = DB::queryFirst("SELECT * FROM $usersTable,$tokensTable WHERE $tokensTable.user_id = $usersTable.$idField AND token = ?", [$token],false);
             
             if ($user) {
                 Auth::login($user);
@@ -63,12 +64,13 @@ class Auth extends DB{
             setcookie('user_token', '', time()-3600, '/', '', true, true);
         }
         unset($_SESSION['user_id']);
+        unset($_SESSION['logged_at']);
         return true;
     }
 
     static function user(){
         if(Auth::$user) return Auth::$user;
-        $res = DB::query('Select * FROM '.Auth::$usersTable.' WHERE id = ?', [$_SESSION['user_id']],false);
+        $res = DB::query('Select * FROM '.Auth::$usersTable.' WHERE '.Auth::$authIdField.' = ?', [$_SESSION['user_id']],false);
         Auth::$user = $res[0];
         return Auth::$user;
     }
