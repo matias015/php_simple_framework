@@ -10,12 +10,13 @@ include_once('App/Services/MailService.php');
 class AuthController{
     
     static function registroView(){
+        isLogin::not();
         include_once('App/Views/Auth/registro.php');
     }
 
     // ok
     static function registro(){
-
+        isLogin::not();
         Validation::validate(function(){
             Validation::required('email','El correo es necesario');
             Validation::required('password','La contraseña es necesaria');
@@ -31,15 +32,18 @@ class AuthController{
         Alumno::setPasword(Request::values(['email','password'],false));
 
         MailService::verificacionMail(Request::value('email'));
+
         Request::redirect('/login', ['mensajes'=>['Revisa tu correo!']]);
     }
 
     static function loginView(){
+        isLogin::not();
         include_once('App/Views/Auth/login.php');
     }
 
-    //TODO: verificar que este verificado el mail
+
     static function login(){
+        isLogin::not();
 
         Validation::validate(function(){
             Validation::required('email','El correo es necesario');
@@ -58,7 +62,6 @@ class AuthController{
         }
 
         Auth::login($alumno);
-
         Request::redirect('/');
     }
 

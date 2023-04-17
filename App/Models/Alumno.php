@@ -38,14 +38,14 @@ class Alumno extends DB{
         DB::query("UPDATE alumnos SET alumnos.mail_token=NULL WHERE alumnos.correo=?",[$mail]);
     }
 
+    
     static function verificarMail($mailToken){
         DB::query('UPDATE alumnos SET verified=1 WHERE correo=? AND mail_token=?',$mailToken);
     }
-
     
     
-    //test
-
+    // materias a las que el alumno se puede inscribir a final
+    // falta: comprobar que haya mesas para esas materias
     static function inscribibles(){
         $exAprob = Examen::aprobados();
         $exAprobString = implode(',',ArrayFlatter::flat($exAprob));

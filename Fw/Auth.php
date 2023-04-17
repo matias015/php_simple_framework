@@ -21,7 +21,7 @@ class Auth extends DB{
     static function login($user, $remember=false) {
         $_SESSION['user_id'] = $user[Auth::$authIdField];
         $_SESSION['logged_at'] = time();
-        echo $user[Auth::$authIdField];
+
         if ($remember) {
             $tokensTable = Auth::$tokensTable;
             $token_duration_time = date('Y-m-d', strtotime(COOKIE_EXPIRATION_TIME));

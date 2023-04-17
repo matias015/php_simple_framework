@@ -5,8 +5,6 @@ require_once('App/Services/FlatArray.php');
 
 class Examen extends DB{
 
-    
-
     static function aprobados(){
         //examenes aprobados
         return DB::query("SELECT examenes.ID_ASIGNATURA
@@ -15,7 +13,6 @@ class Examen extends DB{
     }
 
     static function alumno(){
-        //examenes aprobados
         return DB::query("SELECT asignaturas.nombre as nombre, examenes.nota as nota
         FROM examenes, asignaturas
         WHERE examenes.ID_ALUMNO=?

@@ -4,8 +4,9 @@
 define('AUTH_TABLE_NAME','alumnos');
 define('AUTH_ID_NAME','ID_ALUMNO');
 define('AUTH_TABLE_TOKENS_NAME','user_tokens');
+
 define('COOKIE_EXPIRATION_TIME','+10 seconds');
-define('LOGIN_EXPIRATION_TIME', 10);
+define('LOGIN_EXPIRATION_TIME', 5);
 
 define('DB_USERNAME','root');
 define('DB_PASSWORD','');

@@ -7,6 +7,7 @@ include_once('Fw/Validation.php');
 include_once('App/Middleware/isLogin.php');
 
 class AlumnoController{
+
     static function informacion(){
         isLogin::check();
         $datos = Auth::user();

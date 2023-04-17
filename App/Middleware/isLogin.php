@@ -8,4 +8,11 @@ class isLogin{
         }
     }
 
+    static function not(){
+        if(Auth::isLogin()){
+            Request::redirect('/');
+            return false;
+        }
+    }
+
 }
