@@ -15,3 +15,7 @@ Route::post('/login', function(){ AuthController::login(); });
 
 Route::get('/logout', function(){ AuthController::logout(); });
 
+Route::get('/reset-password', function(){ AuthController::resetPasswordView(); });
+Route::post('/reset-password', function(){ AuthController::resetPassword(); });
+
+Route::post('/change-password', function(){ AuthController::cambiarPassword(); });

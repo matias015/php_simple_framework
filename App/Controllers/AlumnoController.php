@@ -3,6 +3,7 @@
 include_once('App/Models/Alumno.php');
 include_once('App/Models/Cursada.php');
 include_once('App/Models/Examen.php');
+include_once('App/Models/Mesa.php');
 include_once('Fw/Validation.php');
 include_once('App/Middleware/isLogin.php');
 
@@ -31,8 +32,17 @@ class AlumnoController{
     static function inscripciones(){
         isLogin::check();
         $materias = Alumno::inscribibles();
-
+        print_r($materias);
         include_once('App/Views/inscripciones.php');
     }
     
+    static function inscribirAlumno(){
+        isLogin::check();
+        $mesa = Request::value('mesa');
+
+        if(Examen::yaAnotado($mesa)) Request::redirect('/alumno/inscripciones');
+        
+        Examen::anotarAlumno($mesa); 
+        echo "anotado";
+    }
 }

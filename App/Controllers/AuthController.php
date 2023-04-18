@@ -76,4 +76,23 @@ class AuthController{
         Request::redirect('/login');
     }
 
+    static function resetPasswordView(){
+        isLogin::not();
+        include_once('App/Views/Auth/cambio-password.php');
+    }
+
+    static function resetPassword(){
+        isLogin::not();
+        MailService::resetPwPin(Request::value('email'));
+        include_once('App/Views/Auth/nueva-contra.php');
+    }
+
+    static function cambiarPassword(){
+        isLogin::not();
+
+        print_r(Request::values(['password','token']));
+
+        //Request::redirect('/login');
+    }
+
 }

@@ -12,6 +12,17 @@ class Examen extends DB{
         WHERE examenes.ID_ALUMNO=? AND examenes.NOTA>4",[Auth::user()['ID_ALUMNO']]);
     }
 
+    static function yaAnotado($mesa){
+        return DB::queryFirst("SELECT * FROM examenes WHERE ID_MESA=? AND ID_ALUMNO=?",[$mesa,Auth::user()['ID_ALUMNO']]);
+    }
+
+    static function anotarAlumno($mesa){
+        DB::query("INSERT INTO `examenes` 
+        (`ID_EXAMENES`, `ID_MESA`, `ID_ALUMNO`, `ID_ASIGNATURA`, `APROBADO`, `NOTA`, `TIPOFINAL`, `LLAMADO`, `LIBRO`, `ACTA`, `FECHA`, `EQUIVALENCIAS`) 
+        VALUES (NULL, ?, ?, NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL)",
+        [$mesa, Auth::user()['ID_ALUMNO']]);
+    }
+
     static function alumno(){
         return DB::query("SELECT asignaturas.nombre as nombre, examenes.nota as nota
         FROM examenes, asignaturas

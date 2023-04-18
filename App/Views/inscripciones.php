@@ -9,18 +9,30 @@
 <body>
 
     <h1>Inscribirme</h1>
-    <table>
-        <tr>
-            <th></th>
-        </tr>
-        <?php 
-        foreach($materias as $materia){ ?>
-        <tr>    
-            <td><?php echo $materia['nombre'] ?></td>
-        </tr>
+    <div style="display:flex; flex-direction:column;">
+        <?php foreach($materias as $materia){ ?>
+            <div style="display:flex; flex-direction:column;">   
+                <h3><?php echo $materia['nombre'] ?></h3>
+                <form action="/alumno/inscripciones" style="display:flex; flex-direction:column;" method="post">
+                    <?php 
+                        include_once('Fw/Csrf.php');
+                        $mesas = Mesa::materia($materia['ID_ASIGNATURA']); 
+                        if(count($mesas)<1) echo "no hay mesas";
+                        else{
+                            echo "Llamados <br>";
+                            foreach($mesas as $mesa){?>
+                                <label for="">llamado <?php echo $mesa['LLAMADO'] ?>
+                                    <input type="radio" name="mesa" value="<?php echo $mesa['ID_MESA'] ?>">
+                                    fecha:   <?php echo $mesa['FECHA'] ?>
+                                </label>
+                                <?php } ?>
+                    <input type="submit" value="inscribirme">
+                    <?php } ?>
+                </form>
+                
+            </div>
         <?php } ?>
-    </table>
-    
+    </div>
     
 
 
