@@ -3,6 +3,8 @@
 use LDAP\Result;
 
 include_once('App/Models/Alumno.php');
+include_once('App/Models/ResetPassword.php');
+
 include_once('Fw/Validation.php');
 
 include_once('App/Services/MailService.php');
@@ -90,9 +92,15 @@ class AuthController{
     static function cambiarPassword(){
         isLogin::not();
 
-        print_r(Request::values(['password','token']));
+        $resetData = ResetPassword::buscarMailConToken(Request::value('token'));
+        if(!$resetData) Request::redirect('reset-password');
+        
+        $newPw = Request::value('password');
 
-        //Request::redirect('/login');
+        Alumno::setPasword([$resetData['email'],$newPw]);
+        ResetPassword::borrar($resetData['id']);
+
+        Request::redirect('/login',['mensajes'=>['tu contraseña se ha restablecido']]);
     }
 
 }

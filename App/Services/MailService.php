@@ -14,7 +14,7 @@ class MailService{
         
     }
     static function resetPwPin($mail){
-        $token = bin2hex(random_bytes(6));
+        $token = substr(time(),4);
         ResetPassword::setToken($mail,$token);
 
         Mail::to($mail,'Cambia tu contraseña!',"Tu codigo de reseteo de contraseña es: $token",'');
