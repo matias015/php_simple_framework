@@ -5,9 +5,12 @@ Route::get('/mig', function(){
 });
 
 include_once('App/Models/Alumno.php');
+include_once('App/Models/Carrera.php');
 
+include_once('App/Services/DiasHabiles.php');
 
-Route::get('/test',function(){
-    print_r(Alumno::inscribibles(616));
-    
+Route::get('/dias', function(){
+    $fecha = DB::queryFirst("SELECT * FROM mesa WHERE ID_MESA=4454")['FECHA'];
+    echo "fecha: $fecha <br>";
+    print_r(DiasHabiles::desdeHoy($fecha));
 });

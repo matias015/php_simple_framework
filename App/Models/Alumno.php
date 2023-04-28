@@ -11,7 +11,6 @@ class Alumno extends DB{
 
     static function sinRegistrar($mail){
         $alumno = DB::queryFirst("SELECT * FROM alumnos WHERE CORREO=? AND password IS NULL",[$mail],true);
-        print_r($alumno);
         return $alumno;
     }
 
@@ -29,21 +28,19 @@ class Alumno extends DB{
         return DB::query("UPDATE alumnos SET alumnos.password = ? WHERE alumnos.correo = ? ",[$pw,$email]);
     }
 
-
     static function setVerificacionToken($mail,$token){
         DB::query("UPDATE alumnos SET alumnos.mail_token=? WHERE alumnos.correo=?",[$token,$mail]);
     }
 
-    static function unsetVerificacionToken($mail,$token){
-        DB::query("UPDATE alumnos SET alumnos.mail_token=NULL WHERE alumnos.correo=?",[$mail]);
+    static function unsetVerificacionToken($token){
+        DB::query("UPDATE alumnos SET alumnos.mail_token=NULL WHERE alumnos.mail_token=?",[$token]);
     }
-
     
     static function verificarMail($mailToken){
-        DB::query('UPDATE alumnos SET verified=1 WHERE correo=? AND mail_token=?',$mailToken);
+        DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
+        Alumno::unsetVerificacionToken($mailToken);
     }
-    
-    
+        
     // materias a las que el alumno se puede inscribir a final
     // falta: comprobar que haya mesas para esas materias
     static function inscribibles(){
@@ -69,5 +66,13 @@ class Alumno extends DB{
         }
         return $posibles;
     }
+
+    static function yaEstaEnMesa(){
+        $id = Auth::user()['ID_USUARIO'];
+
+        //DB::query();
+    }
+
+    
 
 }

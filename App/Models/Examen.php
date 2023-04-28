@@ -23,12 +23,43 @@ class Examen extends DB{
         [$mesa, Auth::user()['ID_ALUMNO']]);
     }
 
+    static function bajar($mesa){
+        DB::query("DELETE FROM `examenes` WHERE ID_MESA = ? AND ID_ALUMNO=?",
+        [$mesa, Auth::user()['ID_ALUMNO']]);
+        
+    }
+
     static function alumno(){
-        return DB::query("SELECT asignaturas.nombre as nombre, examenes.nota as nota
+        $idCarrera = Carrera::getDefault();
+
+        return DB::query("SELECT asignaturas.nombre as nombre, MAX(examenes.nota) as nota
         FROM examenes, asignaturas
         WHERE examenes.ID_ALUMNO=?
         AND examenes.id_asignatura=asignaturas.id_asignatura
-        ",[Auth::user()['ID_ALUMNO']]);
+        AND asignaturas.id_carrera=?
+        GROUP BY asignaturas.nombre
+        ",[Auth::user()['ID_ALUMNO'], $idCarrera]);
+    }
+
+    static function alumnoAnotado(){
+        $id = Auth::user()['ID_ALUMNO'];
+        $mesas = DB::query("SELECT id_mesa 
+            FROM examenes
+            WHERE examenes.id_alumno=?
+        ",[$id]);
+        return ArrayFlatter::flat($mesas);
+    } 
+
+    static function puedeBajarse($mesa){
+        $id = Auth::user()['ID_ALUMNO'];
+        $mesas = DB::query("SELECT id_mesa 
+            FROM examenes, mesa
+            WHERE examenes.id_alumno = ?
+            AND mesa.id_mesa = examenes.id_mesa
+            AND fecha > NOW() + INTERVAL 1 DAY
+        ",[$id]);
+
+        return ArrayFlatter::flat($mesas);
     }
 
 }

@@ -16,4 +16,13 @@ class GeneralController{
         include_once('App/Views/home.php');
     }
 
+
+    static function setCarrera(){
+        $carrera_id = Request::value('carrera');
+
+        Carrera::setDefault($carrera_id);
+
+        Request::redirect('/');
+    }
+
 }

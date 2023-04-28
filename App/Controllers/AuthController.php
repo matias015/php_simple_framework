@@ -35,7 +35,7 @@ class AuthController{
 
         MailService::verificacionMail(Request::value('email'));
 
-        Request::redirect('/login', ['mensajes'=>['Revisa tu correo!']]);
+        Request::redirect('/email-verify', ['mensajes'=>['Revisa tu correo!']]);
     }
 
     static function loginView(){
@@ -60,16 +60,11 @@ class AuthController{
 
         if($alumno['verified'] == 0) {
             MailService::verificacionMail(Request::value('email'));
-            Request::redirect('/login',['mensajes'=>['Revisa tu mail!']]);
+            Request::redirect('/email-verify');
         }
 
         Auth::login($alumno);
         Request::redirect('/');
-    }
-
-    static function verificarEmail(){
-        Alumno::verificarMail(Request::values(['mail','token'],false));
-        echo 'Ya puedes cerrar esta pagina';
     }
 
     // ok
@@ -79,21 +74,18 @@ class AuthController{
     }
 
     static function resetPasswordView(){
-        isLogin::not();
+        $correoActual = Auth::isLogin()? Auth::user()['CORREO']:"";
         include_once('App/Views/Auth/cambio-password.php');
     }
 
     static function resetPassword(){
-        isLogin::not();
         MailService::resetPwPin(Request::value('email'));
         include_once('App/Views/Auth/nueva-contra.php');
     }
 
     static function cambiarPassword(){
-        isLogin::not();
-
         $resetData = ResetPassword::buscarMailConToken(Request::value('token'));
-        if(!$resetData) Request::redirect('reset-password');
+        if(!$resetData) Request::redirect('/reset-password');
         
         $newPw = Request::value('password');
 

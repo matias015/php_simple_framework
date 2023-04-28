@@ -16,8 +16,8 @@
         <input type="submit" value="Ingresar">
     </form>
 
-    <a href="/registro">registrarme</a><br>
-    <a href="/reset-password">olvide mi contraseña</a>
+    <a href="/registro">Ingresar</a><br>
+    <a href="/reset-password">Olvide mi contraseña</a>
 
     <br><br>
 
