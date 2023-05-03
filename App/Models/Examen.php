@@ -9,7 +9,7 @@ class Examen extends DB{
         //examenes aprobados
         return DB::query("SELECT examenes.ID_ASIGNATURA
         FROM examenes
-        WHERE examenes.ID_ALUMNO=? AND examenes.NOTA>4",[Auth::user()['ID_ALUMNO']]);
+        WHERE examenes.ID_ALUMNO=:id_alumno AND examenes.NOTA>4",['id_alumno'=>Auth::id()]);
     }
 
     static function yaAnotado($mesa){
@@ -19,14 +19,13 @@ class Examen extends DB{
     static function anotarAlumno($mesa){
         DB::query("INSERT INTO `examenes` 
         (`ID_EXAMENES`, `ID_MESA`, `ID_ALUMNO`, `ID_ASIGNATURA`, `APROBADO`, `NOTA`, `TIPOFINAL`, `LLAMADO`, `LIBRO`, `ACTA`, `FECHA`, `EQUIVALENCIAS`) 
-        VALUES (NULL, ?, ?, NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL)",
-        [$mesa, Auth::user()['ID_ALUMNO']]);
+        VALUES (NULL, :id_mesa, :id_alumno, NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL)",
+        ['id_mesa'=>$mesa, 'id_alumno'=>Auth::id()]);
     }
 
     static function bajar($mesa){
-        DB::query("DELETE FROM `examenes` WHERE ID_MESA = ? AND ID_ALUMNO=?",
-        [$mesa, Auth::user()['ID_ALUMNO']]);
-        
+        DB::query("DELETE FROM `examenes` WHERE ID_MESA = :id_mesa AND ID_ALUMNO=:id_alumno",
+        ['id_mesa'=>$mesa, 'id_alumno'=>Auth::id()]);
     }
 
     static function alumno(){

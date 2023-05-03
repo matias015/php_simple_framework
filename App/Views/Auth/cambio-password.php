@@ -9,7 +9,7 @@
 <body>
     <h1>Ingresa el mail</h1>
     <form action="/reset-password" method="post">
-        <?php include_once('Fw/Csrf.php') ?>
+        <?php CSRF::field() ?>
         <input name="email" value="<?php echo $correoActual ?>">
         <input type="submit" value="Enviar mail">
     </form>

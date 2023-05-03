@@ -33,9 +33,10 @@ class DB{
         return false;
       }else return $query[0];
     }
-  
+
+
     static function query($sql, $params = null, $save=false) {
-      DB::connect();
+      DB::connect();    
 
       $stmt = DB::$pdo->prepare($sql);
       $stmt->execute($params);

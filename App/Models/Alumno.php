@@ -9,15 +9,15 @@ require_once('App/Models/Correlativa.php');
 
 class Alumno extends DB{
 
-    static function sinRegistrar($mail){
-        $alumno = DB::queryFirst("SELECT * FROM alumnos WHERE CORREO=? AND password IS NULL",[$mail],true);
+    static function sinRegistrar($correo){
+        $alumno = DB::queryFirst("SELECT * FROM alumnos WHERE CORREO=:correo AND password IS NULL",$correo,true);
         return $alumno;
     }
 
     static function buscarMailPassword($data){
-        $email = $data['email']; $pw=md5($data['password']);
+        $data['password'] = md5($data['password']);
 
-        $user=DB::queryFirst("SELECT * FROM alumnos WHERE correo=? AND password=?",[$email,$pw]);
+        $user=DB::queryFirst("SELECT * FROM alumnos WHERE correo=:correo AND password=:password", $data);
         if(!$user) return false;
         else return $user;
     }
@@ -37,7 +37,7 @@ class Alumno extends DB{
     }
     
     static function verificarMail($mailToken){
-        DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
+        DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=:token',$mailToken);
         Alumno::unsetVerificacionToken($mailToken);
     }
         

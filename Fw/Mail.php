@@ -13,52 +13,46 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class Mail{
-
-    private static $instance = null;
-
-    static function init(){
-        Mail::$instance = new PHPMailer(true);
-        
-        //Mail::$instance->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-        Mail::$instance->isSMTP();                                            //Send using SMTP
-        Mail::$instance->Host       = MAIL_HOST;                     //Set the SMTP server to send through
-        Mail::$instance->SMTPAuth   = MAIL_SMTP_AUTH;                                   //Enable SMTP authentication
-        Mail::$instance->Username   = MAIL_USERNAME;                     //SMTP username
-        Mail::$instance->Password   = MAIL_PASSWORD;                               //SMTP password
-        Mail::$instance->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-        Mail::$instance->Port       = MAIL_PORT;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-    }
-
     static function to($to,$subject,$body,$altBody){
 
+        //Create an instance; passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
         try {
-            
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = MAIL_HOST;                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = MAIL_SMTP_AUTH;                                   //Enable SMTP authentication
+            $mail->Username   = MAIL_USERNAME;                     //SMTP username
+            $mail->Password   = MAIL_PASSWORD;                               //SMTP password
+            $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+            $mail->Port       = MAIL_PORT;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
             //Recipients
-            Mail::$instance->setFrom('a@example.com', 'Mailer');
-            Mail::$instance->addAddress($to);               //Name is optional
-            Mail::$instance->addReplyTo('c@example.com', 'Information');
-            Mail::$instance->addCC('d@example.com');
-            Mail::$instance->addBCC('e@example.com');
+            $mail->setFrom('a@example.com', 'Mailer');
+            $mail->addAddress($to);               //Name is optional
+            $mail->addReplyTo('c@example.com', 'Information');
+            $mail->addCC('d@example.com');
+            $mail->addBCC('e@example.com');
 
             //Attachments
-            //Mail::$instance->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-            //Mail::$instance->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+            //$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+            //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
             //Content
-            Mail::$instance->isHTML(true);                                  //Set email format to HTML
-            Mail::$instance->Subject = $subject;
-            Mail::$instance->Body    = $body;
-            Mail::$instance->AltBody = $altBody;
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = $subject;
+            $mail->Body    = $body;
+            $mail->AltBody = $altBody;
 
-            Mail::$instance->send();
+            $mail->send();
             return true;
         } catch (Exception $e) {
-            //echo "Message could not be sent. Mailer Error: {Mail::$instance->ErrorInfo}";
+            //echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             return false;
         }    
 
 
     }
 }
-
-Mail::init();

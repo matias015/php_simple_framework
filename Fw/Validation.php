@@ -33,6 +33,33 @@ class Validation{
         }
     }
 
+    static public function unique($name, $tableDb,$msg){
+        if(Validation::nameHasError($name)) return;
+
+        $table = $tableDb[0];
+        $field = $tableDb[1];
+
+        $value = Validation::$data[$name];
+
+        if(DB::queryFirst("SELECT $field FROM $table WHERE $field='$value'")){
+            Validation::$errors[$name] = $msg;
+        }
+    }
+
+    static public function min($name, $min, $msg){
+        if(Validation::nameHasError($name)) return;
+        if(strlen(Validation::$data[$name]) < $min){
+            Validation::$errors[$name] = $msg;
+        }
+    }
+
+    static public function max($name, $max, $msg){
+        if(Validation::nameHasError($name)) return;
+        if(strlen(Validation::$data[$name]) > $max){
+            Validation::$errors[$name] = $msg;
+        }
+    }
+
     static public function in($name, $values, $msg){
         if(Validation::nameHasError($name)) return;
         if(!in_array(Validation::$data[$name], $values)){

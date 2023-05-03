@@ -7,7 +7,7 @@ class Migrator{
     static $registered = [];
 
     static function getMigrationsData(){
-        $exists = DB::query("SHOW TABLES LIKE 'migrations'",[]);
+        $exists = DB::query("SHOW TABLES LIKE 'migrations'");
         
         if(empty($exists)){
             DB::query("CREATE TABLE migrations (
@@ -15,10 +15,10 @@ class Migrator{
                 name VARCHAR(255) NOT NULL , 
                 PRIMARY KEY (id)
                 ) 
-                ",[]);
+                ");
         }
         
-        return DB::query("SELECT * FROM migrations",[]);
+        return DB::query("SELECT * FROM migrations");
     }        
 
     
@@ -43,7 +43,7 @@ class Migrator{
     }
 
     static function registerMigrated($name){
-        DB::query("INSERT INTO migrations VALUES(NULL, ?)",[$name]);
+        DB::query("INSERT INTO migrations VALUES(NULL, :migrationName)",["migrationName"=>$name]);
     }
 
 

@@ -12,7 +12,7 @@
     <form method="POST" action="/registro">
         email <input name="email">
         contraseña <input name="password">
-        <?php include_once('Fw/Csrf.php') ?>
+        <?php CSRF::field() ?>
         <input type="submit" value="Crear cuenta">
     </form>
 

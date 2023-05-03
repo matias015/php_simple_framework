@@ -9,7 +9,7 @@
 <body>
     <form method="POST" action="/email-verify">
         <input name='user_token'>
-        <?php include_once('Fw/Csrf.php') ?>
+        <?php CSRF::field() ?>
     </form>
 </body>
 </html>

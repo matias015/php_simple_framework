@@ -6,6 +6,7 @@ include_once('App/Models/Examen.php');
 include_once('App/Models/Mesa.php');
 include_once('Fw/Validation.php');
 include_once('App/Middleware/isLogin.php');
+include_once('Fw/Response.php');
 
 class AlumnoController{
 
@@ -17,7 +18,8 @@ class AlumnoController{
         
         $datos = Auth::user();
         
-        include_once('App/Views/informacion.php');
+        Response::view('informacion', ['carreras'=>$carreras,'default'=>$default,'datos'=>$datos]);
+        //include_once('App/Views/informacion.php');
     }
 
     static function cursadas(){

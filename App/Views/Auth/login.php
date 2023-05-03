@@ -10,9 +10,9 @@
     <h1>Login</h1>
 
     <form method="POST" action="/login">
-        email <input name="email">
+        email <input name="correo">
         contraseña <input name="password">
-        <?php include_once('Fw/Csrf.php') ?>
+        <?php CSRF::field() ?>
         <input type="submit" value="Ingresar">
     </form>
 

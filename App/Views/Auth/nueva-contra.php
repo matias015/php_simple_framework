@@ -9,7 +9,7 @@
 <body>
     <h1>Elige una nueva contraseña</h1>
     <form action="/change-password" method="post">
-        <?php include_once('Fw/Csrf.php') ?>
+    <?php CSRF::field() ?>
         <input name="password">
         <input name="token">
         <input type="submit" value="Cambiar contraseña">

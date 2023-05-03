@@ -40,6 +40,7 @@ class AuthController{
 
     static function loginView(){
         isLogin::not();
+        
         include_once('App/Views/Auth/login.php');
     }
 
@@ -48,13 +49,13 @@ class AuthController{
         isLogin::not();
 
         Validation::validate(function(){
-            Validation::required('email','El correo es necesario');
+            Validation::required('correo','El correo es necesario');
             Validation::required('password','La contraseña es necesaria');
         });
 
         if(!Validation::success()) Request::redirect('/login',['errores'=>Validation::getErrors()]);
 
-        $alumno = Alumno::buscarMailPassword(Request::values(['email','password']));
+        $alumno = Alumno::buscarMailPassword(Request::values('correo','password'));
         if(!$alumno) Request::redirect('/login', ['errores'=>['Credenciales invalidas']]);
         
 

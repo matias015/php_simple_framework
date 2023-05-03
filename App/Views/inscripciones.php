@@ -37,7 +37,7 @@
             
             echo '<p>' . $materia['nombre'] . '</p>';
             echo '<form action="/alumno/'. $path .'" method="post" style="display:flex; flex-direction:column;">';
-            include_once('Fw/Csrf.php');
+            CSRF::field();
             
             if($yaAnotado){
                 include('App/Views/Componentes/desinscripcion-form.php');        

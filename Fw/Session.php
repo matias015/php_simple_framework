@@ -1,7 +1,13 @@
 <?php
-
+include_once('Fw/Csrf.php');
 class Session{
-    
+
+    static function init(){
+        session_start();
+        Auth::start();
+        CSRF::generate();
+    }
+
     static function set($key,$value){
         $_SESSION[$key] = $value;
     }
@@ -24,4 +30,11 @@ class Session{
         return $val;
     }
 
+    static function destroy(){
+        session_destroy();
+        session_unset();
+        session_regenerate_id();
+    }
+
 }
+Session::init();

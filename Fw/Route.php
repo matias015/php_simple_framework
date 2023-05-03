@@ -37,7 +37,7 @@ class Route{
         $path = trim(Route::path(), '/');
         $method = Route::method();
         if(isset(Route::$routes[$method][$path]))
-        {
+        {            
             LoginIsExpired::check();
             if($method==='POST') {csrfTokenMiddle::check(); }
             Route::$routes[$method][$path]();
