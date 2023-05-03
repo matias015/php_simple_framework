@@ -21,6 +21,7 @@ class Auth extends DB{
     static function login($user, $remember=false) {
         $_SESSION['user_id'] = $user[Auth::$authIdField];
         $_SESSION['logged_at'] = time();
+    
 
         if ($remember) {
             $tokensTable = Auth::$tokensTable;
@@ -78,7 +79,7 @@ class Auth extends DB{
     static public function deleteExpiredTokens(){
         DB::query('DELETE FROM user_tokens WHERE exp_date < NOW()');
     }
-    
+
 }
 
 Auth::start();

@@ -14,6 +14,8 @@ class Cursada{
         ",[Auth::user()['ID_ALUMNO'], $idCarrera]);
     }
 
+    
+
     static function alumno(){
         $idCarrera = Carrera::getDefault();
 

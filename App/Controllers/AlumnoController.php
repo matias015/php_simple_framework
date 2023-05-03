@@ -38,6 +38,8 @@ class AlumnoController{
     static function inscripciones(){
         isLogin::check();
         $materias = Alumno::inscribibles();
+
+        Session::set('alumno_inscribibles', $materias);
         $yaAnotadas = Examen::alumnoAnotado();
         include_once('App/Views/inscripciones.php');
     }
@@ -47,11 +49,14 @@ class AlumnoController{
 
         $mesa = Request::value('mesa');
 
-        $inscribibles = Alumno::inscribibles();
+        $inscribibles = Session::exists('alumno_inscribibles')? Session::get('alumno_inscribibles') : Alumno::inscribibles();
+        
         $puede = false;
 
         foreach($inscribibles as $materia){
-            if($materia['ID_ASIGNATURA'] == $mesa){
+
+            if(Mesa::materia($materia['ID_ASIGNATURA']) == $mesa){
+                
                 $puede = true;
                 break;
             }
