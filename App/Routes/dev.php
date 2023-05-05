@@ -19,10 +19,12 @@ Route::get('coll', function(){
 
     include_once('App/Models/Alumno.php');
     
-    $alumno = Query::select('*')
-    -> from('alumnos')
-    -> where('correo', 'JUANDICANDIA18JMDC@GMAIL.COM')
-    -> andWhere('password','=',':NULL')
-    -> exec();
+    $alumno = Query::update('users')
+        -> set('f1','v1')
+        -> set('f2','v2')        
+        -> where('f1','v1')
+        -> andWhere('f2','v2')
+        -> getQueryString();
 
+    print_r($alumno);
 });

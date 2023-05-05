@@ -6,7 +6,6 @@ require_once('App/Models/Examen.php');
 require_once('App/Models/Cursada.php');
 require_once('App/Models/Correlativa.php');
 
-
 class Alumno extends DB{
 
     static function sinRegistrar($correo){

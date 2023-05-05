@@ -5,6 +5,7 @@ class Query{
     private $query = "";
     protected $table;
     private $queryType = "SELECT";
+    private $isFirstSetStatement = true;
     private $conditions = [];
     private $tables = [];
     private $fields = [];
@@ -38,6 +39,65 @@ class Query{
         $instance -> addToFinalQuery(" " . $instance->parseList($fields));
 
         return $instance;
+    }
+
+    static function insert($table){
+        $instance = new Query();
+        $instance -> setQueryType("INSERT INTO");
+        
+        $instance -> addToFinalQuery(" " . $table);
+
+        return $instance;
+    }
+
+    static function update($table){
+        $instance = new Query();
+        $instance -> setQueryType("UPDATE");
+
+        $instance -> addToFinalQuery(" $table");
+
+        return $instance;
+    }
+
+    public function set($f,$v){
+        if($this->isFirstSetStatement){
+            $this -> addToFinalQuery(" SET $f = ");
+            $this->isFirstSetStatement = false;
+        }else{
+            $this -> addToFinalQuery(", $f = ");
+        }
+        
+        if(str_starts_with($v, ':')){
+            $this -> addToFinalQuery(substr($v,1));
+        }else{
+            $this -> addToFinalQuery("?");
+            $this -> addParam($v);
+        }
+        return $this;
+    }
+
+    public function fields(...$fields){
+        $fieldList = $this -> parseList($fields);
+        $this -> addToFinalQuery("($fieldList)");
+        return $this;
+    }
+
+    public function values(...$values){
+
+        $this -> addToFinalQuery(" VALUES(");
+        
+        
+        foreach($values as $key => $value){
+            if($key > 0) $this -> addToFinalQuery(", ");
+            if(str_starts_with($value, ':')){
+                $this -> addToFinalQuery(substr($value,1));
+            }else{
+                $this -> addToFinalQuery("?");
+                $this -> addParam($value);
+            }
+        }
+        $this -> addToFinalQuery(")");
+        return $this;
     }
 
     public function from(...$tables){
@@ -92,8 +152,14 @@ class Query{
         return $this;
     }
 
+
+
     public function exec(){  
         return DB::query($this->query,$this->params);
+    }
+
+    public function getQueryString(){
+        return $this->query;
     }
     
     public function first(){  

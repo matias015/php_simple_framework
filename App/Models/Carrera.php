@@ -23,7 +23,10 @@ class Carrera{
         $yaExiste = DB::queryFirst("SELECT id FROM carrera_default WHERE id_alumno=:id_alumno",['id_alumno'=>$userId]);
         
         if(!$yaExiste){
-            DB::query("INSERT INTO carrera_default VALUES(NULL, :user_id, :id_carrera)",['user_id'=>$userId,'id_carrera'=>$idCarrera]);
+            Query::insert('carrera_default')
+                -> values(':NULL', Auth::id(), $idCarrera)
+                -> exec();
+            //DB::query("INSERT INTO carrera_default VALUES(NULL, :user_id, :id_carrera)",['user_id'=>$userId,'id_carrera'=>$idCarrera]);
         }else{
             DB::query("UPDATE carrera_default SET id_carrera=:id_carrera WHERE id_alumno=:user_id",['user_id'=>$userId,'id_carrera'=>$idCarrera]);
         }
