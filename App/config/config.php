@@ -5,9 +5,12 @@ define('AUTH_TABLE_NAME','alumnos');
 define('AUTH_ID_NAME','id_alumno');
 define('AUTH_TABLE_TOKENS_NAME','user_tokens');
 
-define('COOKIE_EXPIRATION_TIME','+10 seconds');
-define('LOGIN_EXPIRATION_TIME', 921312315);
+define('COOKIE_EXPIRATION_TIME','+10000 seconds');
+define('SECURE_COOKIES', true);
+define('HTTP_COOKIES_ONLY', true);
+define('LOGIN_EXPIRATION_TIME', 9999100);
 
+define('DB_TYPE','mysql');
 define('DB_USERNAME','root');
 define('DB_PASSWORD','');
 define('DB_DBNAME','movedb');

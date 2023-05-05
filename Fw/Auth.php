@@ -18,7 +18,7 @@ class Auth extends DB{
     }
 
     static function login($user, $remember=false) {
-        print_r(123132);
+
         $_SESSION['user_id'] = $user -> {Auth::$authIdField};
         $_SESSION['logged_at'] = time();
 

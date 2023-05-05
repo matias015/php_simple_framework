@@ -36,15 +36,19 @@ class Route{
     static function dispatch(){
         $path = trim(Route::path(), '/');
         $method = Route::method();
-        if(isset(Route::$routes[$method][$path]))
-        {            
+
+        if(isset(Route::$routes[$method][$path])){            
+            
             LoginIsExpired::check();
-            if($method==='POST') {csrfTokenMiddle::check(); }
+
+            if($method==='POST') {
+                csrfTokenMiddle::check(); 
+            }
+
             Route::$routes[$method][$path]();
         }
         else{
-            include_once('App/views/errors/404.php');
-            exit;
+            Request::redirect('/404');
         }
     }
     

@@ -1,5 +1,5 @@
 <?php
-require_once('querys.php');
+require_once('Query.php');
 require_once('Fw/Auth.php');
 require_once('App/Services/FlatArray.php');
 require_once('App/Models/Examen.php');
@@ -10,22 +10,31 @@ require_once('App/Models/Correlativa.php');
 class Alumno extends DB{
 
     static function sinRegistrar($correo){
-        $alumno = DB::queryFirst("SELECT * FROM alumnos WHERE CORREO=:correo AND password IS NULL",$correo,true);
+        $alumno = Query::select('*')
+            -> from('alumnos')
+            -> where('correo', $correo)
+            -> andWhere('password','IS',':NULL')
+            -> exec();
+        //$alumno = DB::queryFirst("SELECT * FROM alumnos WHERE CORREO=:correo AND password IS NULL",$correo,true);
         return $alumno;
     }
 
     static function buscarMailPassword($data){
         $data['password'] = md5($data['password']);
 
-        $user=DB::queryFirst("SELECT * FROM alumnos WHERE correo=:correo AND password=:password", $data);
+        $user = Query::select("*")
+            -> from("alumnos")
+            -> where('correo', $data['correo'])
+            -> andWhere('password', $data['password'])
+            -> first();
+
         if(!$user) return false;
         else return $user;
     }
 
-    static function setPasword($data){
-        $email = $data[0];
-        $pw = md5($data[1]);
-        return DB::query("UPDATE alumnos SET alumnos.password = ? WHERE alumnos.correo = ? ",[$pw,$email]);
+    static function setPasword($data){        
+        $data['password'] = md5($data['password']);
+        return DB::query("UPDATE alumnos SET alumnos.password = :password WHERE alumnos.correo = :email ",$data);
     }
 
     static function setVerificacionToken($mail,$token){
@@ -37,7 +46,7 @@ class Alumno extends DB{
     }
     
     static function verificarMail($mailToken){
-        DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=:token',$mailToken);
+        DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
         Alumno::unsetVerificacionToken($mailToken);
     }
         

@@ -5,8 +5,6 @@ class Validation{
     static private $errors;
     static private $data;
 
-
-
     static function validate($cb){
         if(Route::method() == 'POST') Validation::$data = $_POST;
         if(Route::method() == 'GET') Validation::$data = $_GET;

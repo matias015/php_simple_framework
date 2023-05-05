@@ -17,8 +17,12 @@ Route::get('/dias', function(){
 
 Route::get('coll', function(){
 
-    include_once('Fw/Collection.php');
+    include_once('App/Models/Alumno.php');
     
-    $carrera = DB::queryFirst("SELECT * FROM carrera");
+    $alumno = Query::select('*')
+    -> from('alumnos')
+    -> where('correo', 'JUANDICANDIA18JMDC@GMAIL.COM')
+    -> andWhere('password','=',':NULL')
+    -> exec();
 
 });

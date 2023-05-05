@@ -31,7 +31,7 @@ class AuthController{
         $alumno = Alumno::sinRegistrar($email);
         if(!$alumno) Request::redirect('/registro', ['errores'=>['Ya existe una cuenta asociada a este correo electronico o el correo no existe']]);
 
-        Alumno::setPasword(Request::values(['email','password'],false));
+        Alumno::setPasword(Request::values('email','password'));
 
         MailService::verificacionMail(Request::value('email'));
 

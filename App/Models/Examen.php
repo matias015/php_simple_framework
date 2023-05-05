@@ -1,5 +1,5 @@
 <?php
-require_once('querys.php');
+require_once('Query.php');
 require_once('Fw/Auth.php');
 require_once('App/Services/FlatArray.php');
 
@@ -9,7 +9,7 @@ class Examen extends DB{
         //examenes aprobados
         return DB::query("SELECT examenes.ID_ASIGNATURA
         FROM examenes
-        WHERE examenes.ID_ALUMNO=:id_alumno AND examenes.NOTA>4",['id_alumno'=>Auth::id()]);
+        WHERE examenes.ID_ALUMNO=:id_alumno AND examenes.NOTA>=4",['id_alumno'=>Auth::id()]);
     }
 
     static function yaAnotado($mesa){

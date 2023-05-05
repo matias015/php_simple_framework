@@ -31,7 +31,7 @@ class Carrera{
 
     static function getDefault(){
         $carrera = DB::queryFirst("SELECT id_carrera as id FROM carrera_default WHERE id_alumno=:id",['id'=>Auth::id()]);
-        if(!$carrera || $carrera->id == 0) return Carrera::deAlumno()[0]['id_carrera'];
+        if(!$carrera || $carrera->id == 0) return Carrera::deAlumno()[0]->id_carrera;
         else return $carrera->id;
     }
 }

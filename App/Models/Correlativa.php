@@ -1,9 +1,12 @@
 <?php
+include_once('Query.php');
 
 class correlativa{
     static function de($id){
-        return DB::query("SELECT ASIGNATURA_CORRELATIVA 
-        FROM `correlatividad` 
-        WHERE ID_ASIGNATURA=?",[$id]);
+
+        return Query::select('asignatura_correlativa')
+            -> from('correlatividad')
+            -> where('id_asignatura',$id)
+            -> exec();
     }
 }

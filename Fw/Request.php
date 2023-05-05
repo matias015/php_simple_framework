@@ -59,6 +59,11 @@ class Request{
   static function bcrypt($wd){
     return password_hash($wd, PASSWORD_DEFAULT);
   }
+
+  static function ip(){
+    return $_SERVER['REMOTE_ADDR'];
+  }
+
 }
 
 ?>

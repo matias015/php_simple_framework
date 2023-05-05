@@ -1,32 +1,47 @@
 <?php 
 
+include_once('Query.php');
+
+function performance($cb){    
+    $start_time = microtime(true);
+    $start_memory = memory_get_usage();
+    
+    $cb();
+    
+    $end_time = microtime(true);
+    $end_memory = memory_get_usage();
+    
+    $execution_time = ($end_time - $start_time) * 1000; // en milisegundos
+    $memory_usage = ($end_memory - $start_memory) / 1024 / 1024; // en megabytes
+    echo "<br><br>tiempo: $execution_time <br><br>";
+    echo "<br><br>memoria: $memory_usage <br><br>";
+}
+
 class Cursada{
     static function aprobadasSinRendir($listaAprobados){
-
         $idCarrera = Carrera::getDefault();
-
-        return DB::query("SELECT cursada.ID_ASIGNATURA, asignaturas.nombre as nombre
-        FROM cursada, alumnos, asignaturas
-        WHERE cursada.ID_ALUMNO = alumnos.ID_ALUMNO AND cursada.APROBADA=1 AND alumnos.ID_ALUMNO=:id_alumno
-        AND cursada.ID_ASIGNATURA NOT IN($listaAprobados)
-        AND asignaturas.id_asignatura=cursada.id_asignatura
-        AND asignaturas.id_carrera = :id_carrera
-        ",['id_alumno'=>Auth::id(), 'id_carrera'=>$idCarrera]);
+        
+        return Query::select('cursada.id_asignatura','asignaturas.nombre')
+            -> from('cursada')
+            -> join('asignaturas', 'asignaturas.id_asignatura','cursada.id_asignatura')
+            -> andWhere('cursada.aprobada', 1)
+            -> andWhere('cursada.id_alumno', Auth::id())
+            -> andWhere('cursada.ID_ASIGNATURA', 'NOT IN', $listaAprobados)
+            -> andWhere('asignaturas.id_carrera', $idCarrera)
+            -> exec();
     }
 
-    
 
-    static function alumno(){
+    static function alumno(){        
         $idCarrera = Carrera::getDefault();
 
-        return DB::query("SELECT 
-            cursada.ID_ASIGNATURA,
-            asignaturas.nombre as NOMBRE, 
-            ANO_CURSADA, 
-            APROBADA
-        FROM cursada,asignaturas
-        WHERE cursada.id_alumno=:id_alumno
-        AND cursada.id_asignatura = asignaturas.id_asignatura
-        AND asignaturas.id_carrera = :id_cursada", ['id_alumno'=>Auth::id(), 'id_cursada'=>$idCarrera]);
+        $cursadas = Query::select('cursada.id_asignatura','asignaturas.nombre','ano_cursada', 'aprobada')
+            -> from('cursada') 
+            -> join('asignaturas', 'cursada.id_asignatura','asignaturas.id_asignatura')
+            -> where('cursada.id_alumno', Auth::id())
+            -> andWhere('asignaturas.id_carrera', $idCarrera)
+            -> exec();
+    
+        return $cursadas;    
     }
 }

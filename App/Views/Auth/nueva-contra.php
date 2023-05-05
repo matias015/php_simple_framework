@@ -10,7 +10,9 @@
     <h1>Elige una nueva contraseña</h1>
     <form action="/change-password" method="post">
     <?php CSRF::field() ?>
+        password
         <input name="password">
+        token
         <input name="token">
         <input type="submit" value="Cambiar contraseña">
     </form>

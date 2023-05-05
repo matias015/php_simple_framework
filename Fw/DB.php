@@ -12,6 +12,7 @@ class DB{
     static $host = DB_HOST;
     static $dbname = DB_DBNAME;
     static $options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+    static $type = DB_TYPE;
   
     // public function pdo_instance(){
     //   return $this -> pdo;
@@ -20,7 +21,8 @@ class DB{
     static function connect(){
         $host = DB::$host;
         $dbname = DB::$dbname;
-        DB::$pdo = new PDO("mysql:host=$host;dbname=$dbname", DB::$username, DB::$password, DB::$options);
+        $type = DB::$type;
+        DB::$pdo = new PDO("$type:host=$host;dbname=$dbname", DB::$username, DB::$password, DB::$options);
     }
   
     static function disconnect() {
@@ -28,14 +30,12 @@ class DB{
     }
 
     static function queryFirst($sql, $params = null, $save=false){
-      $query = DB::query($sql,$params,$save);
+      $query = DB::query("$sql LIMIT 1",$params,$save);
       
       if(count($query) < 1){
         return false;
       }else return Collection::toObject($query[0]);
-
     }
-
 
     static function query($sql, $params = null, $save=false) {
       DB::connect();    
