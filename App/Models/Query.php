@@ -151,8 +151,20 @@ class Query{
         $this -> addToFinalQuery(" LEFT JOIN $table ON $f1 = $f2");
         return $this;
     }
+    public function rightJoin($table, $f1, $f2){
+        $this -> addToFinalQuery(" RIGHT JOIN $table ON $f1 = $f2");
+        return $this;
+    }
 
+    public function group($f){
+        $this -> addToFinalQuery(" GROUP BY $f");
+        return $this;
+    }
 
+    public function order($f, $type=''){
+        $this -> addToFinalQuery(" ORDER BY $f $type");
+        return $this;
+    }
 
     public function exec(){  
         return DB::query($this->query,$this->params);

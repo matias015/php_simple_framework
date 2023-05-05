@@ -15,16 +15,3 @@ Route::get('/dias', function(){
     print_r(DiasHabiles::desdeHoyHasta($fecha));
 });
 
-Route::get('coll', function(){
-
-    include_once('App/Models/Alumno.php');
-    
-    $alumno = Query::update('users')
-        -> set('f1','v1')
-        -> set('f2','v2')        
-        -> where('f1','v1')
-        -> andWhere('f2','v2')
-        -> getQueryString();
-
-    print_r($alumno);
-});

@@ -7,20 +7,27 @@ class Examen extends DB{
 
     static function aprobados(){
         //examenes aprobados
-        return DB::query("SELECT examenes.ID_ASIGNATURA
-        FROM examenes
-        WHERE examenes.ID_ALUMNO=:id_alumno AND examenes.NOTA>=4",['id_alumno'=>Auth::id()]);
+        return Query::select('id_asignatura')
+            -> from('examenes')
+            -> where('id_alumno',Auth::id())
+            -> andWhere('nota','>=',':4')
+            -> exec();
     }
 
     static function yaAnotado($mesa){
-        return DB::queryFirst("SELECT * FROM examenes WHERE ID_MESA=? AND ID_ALUMNO=?",[$mesa,Auth::id()]);
+        return Query::select('*')
+            -> from('examenes')
+            -> where('id_mesa', $mesa)
+            -> andWhere('id_alumno', Auth::id())
+            -> exec();
+        
     }
 
     static function anotarAlumno($mesa){
-        DB::query("INSERT INTO `examenes` 
-        (`ID_EXAMENES`, `ID_MESA`, `ID_ALUMNO`, `ID_ASIGNATURA`, `APROBADO`, `NOTA`, `TIPOFINAL`, `LLAMADO`, `LIBRO`, `ACTA`, `FECHA`, `EQUIVALENCIAS`) 
-        VALUES (NULL, :id_mesa, :id_alumno, NULL, NULL, '0.00', NULL, NULL, NULL, NULL, NULL, NULL)",
-        ['id_mesa'=>$mesa, 'id_alumno'=>Auth::id()]);
+        Query::insert('examenes')
+            -> fields('id_examenes', 'id_mesa', 'id_alumno', 'id_asignatura', 'aprobado', 'nota', 'tipofinal', 'llamado', 'libro', 'acta', 'fecha', 'equivalencias')
+            -> values(':NULL', $mesa, Auth::id(), ':NULL', ':NULL', '0.00', ':NULL', ':NULL', ':NULL', ':NULL', ':NULL', ':NULL')
+            -> exec();
     }
 
     static function bajar($mesa){
@@ -31,21 +38,18 @@ class Examen extends DB{
     static function alumno(){
         $idCarrera = Carrera::getDefault();
 
-        return DB::query("SELECT asignaturas.nombre as nombre, MAX(examenes.nota) as nota
-        FROM examenes, asignaturas
-        WHERE examenes.ID_ALUMNO=?
-        AND examenes.id_asignatura=asignaturas.id_asignatura
-        AND asignaturas.id_carrera=?
-        GROUP BY asignaturas.nombre
-        ",[Auth::id(), $idCarrera]);
+        return Query::select('asignaturas.nombre', 'MAX(examenes.nota) as nota')
+            -> from('asignaturas')
+            -> join('examenes','examenes.id_asignatura','asignaturas.id_asignatura')
+            -> where('examenes.id_alumno', Auth::id())
+            -> andWhere('asignaturas.id_carrera', $idCarrera)
+            -> group('asignaturas.nombre')
+            -> exec();
     }
 
     static function alumnoAnotado(){
         $id = Auth::id();
-        $mesas = DB::query("SELECT id_mesa 
-            FROM examenes
-            WHERE examenes.id_alumno=?
-        ",[$id]);
+        $mesas = DB::query("SELECT id_mesa FROM examenes WHERE examenes.id_alumno=?",[$id]);
         return ArrayFlatter::flat($mesas);
     } 
 

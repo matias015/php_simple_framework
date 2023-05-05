@@ -33,11 +33,18 @@ class Alumno extends DB{
 
     static function setPasword($data){        
         $data['password'] = md5($data['password']);
-        return DB::query("UPDATE alumnos SET alumnos.password = :password WHERE alumnos.correo = :email ",$data);
+
+        return Query::update('alumnos')
+            -> set('password', $data['password'])
+            -> where('correo',$data['email'])
+            -> exec();
     }
 
     static function setVerificacionToken($mail,$token){
-        DB::query("UPDATE alumnos SET alumnos.mail_token=? WHERE alumnos.correo=?",[$token,$mail]);
+        Query::update('alumnos')
+            -> set('mail_token', $token)
+            -> where('correo', $mail)
+            -> exec();
     }
 
     static function unsetVerificacionToken($token){
@@ -45,7 +52,8 @@ class Alumno extends DB{
     }
     
     static function verificarMail($mailToken){
-        DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
+        Query::update('alumnos')->set('verified',':1')->where('mail_token',$mailToken)->exec();
+        //DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
         Alumno::unsetVerificacionToken($mailToken);
     }
         

@@ -26,15 +26,23 @@ class Carrera{
             Query::insert('carrera_default')
                 -> values(':NULL', Auth::id(), $idCarrera)
                 -> exec();
-            //DB::query("INSERT INTO carrera_default VALUES(NULL, :user_id, :id_carrera)",['user_id'=>$userId,'id_carrera'=>$idCarrera]);
         }else{
-            DB::query("UPDATE carrera_default SET id_carrera=:id_carrera WHERE id_alumno=:user_id",['user_id'=>$userId,'id_carrera'=>$idCarrera]);
+            Query::update('carrera_default')
+                -> set('id_carrera',$idCarrera)
+                -> where('id_alumno', Auth::id())
+                -> exec();
         }
     }
 
     static function getDefault(){
-        $carrera = DB::queryFirst("SELECT id_carrera as id FROM carrera_default WHERE id_alumno=:id",['id'=>Auth::id()]);
-        if(!$carrera || $carrera->id == 0) return Carrera::deAlumno()[0]->id_carrera;
-        else return $carrera->id;
+        $carrera = Query::select('id_carrera')
+            -> from('carrera_default')
+            -> where('id_alumno',Auth::id())
+            -> first();
+
+        if(!$carrera || $carrera->id_carrera == 0) {
+            return Carrera::deAlumno()[0]->id_carrera;
+        }
+        else return $carrera->id_carrera;
     }
 }
