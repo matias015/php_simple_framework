@@ -5,7 +5,7 @@
         <li><a href="/alumno/examenes">Mis examenes</a></li>
         <li><a href="/alumno/inscripciones">Inscribir a mesa</a></li>
         <hr>
-        <li><?php echo Auth::user()['NOMBRE'] ?></li>
+        <li><?php echo Auth::user() -> nombre ?></li>
         <li><a href="/logout">Cerrar sesion</a></li>
     </nav>
 

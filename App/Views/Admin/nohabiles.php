@@ -7,6 +7,18 @@
     <title>Document</title>
 </head>
 <body>
-    
+
+    <form action="/admin/dias/agregar" method="post">
+        <?php CSRF::field() ?>
+        <input type="date" name="fecha">
+        <input type="submit" value="anotar">
+    </form>
+
+    <ul>
+        <?php foreach($dias as $dia){
+            echo "<li>$dia->fecha</li>";
+        } ?>
+    </ul>
+
 </body>
 </html>

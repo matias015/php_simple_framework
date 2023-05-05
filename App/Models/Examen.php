@@ -13,7 +13,7 @@ class Examen extends DB{
     }
 
     static function yaAnotado($mesa){
-        return DB::queryFirst("SELECT * FROM examenes WHERE ID_MESA=? AND ID_ALUMNO=?",[$mesa,Auth::user()['ID_ALUMNO']]);
+        return DB::queryFirst("SELECT * FROM examenes WHERE ID_MESA=? AND ID_ALUMNO=?",[$mesa,Auth::id()]);
     }
 
     static function anotarAlumno($mesa){
@@ -37,11 +37,11 @@ class Examen extends DB{
         AND examenes.id_asignatura=asignaturas.id_asignatura
         AND asignaturas.id_carrera=?
         GROUP BY asignaturas.nombre
-        ",[Auth::user()['ID_ALUMNO'], $idCarrera]);
+        ",[Auth::id(), $idCarrera]);
     }
 
     static function alumnoAnotado(){
-        $id = Auth::user()['ID_ALUMNO'];
+        $id = Auth::id();
         $mesas = DB::query("SELECT id_mesa 
             FROM examenes
             WHERE examenes.id_alumno=?

@@ -7,7 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-<?php 
+<?php
+
+use function PHPSTORM_META\type;
+
     include_once('App/Views/Componentes/header.php'); 
     include_once('App/Services/FormatoTexto.php');
 ?>
@@ -22,11 +25,12 @@
         <?php 
         foreach($cursadas as $cursada){ ?>
         <tr>    
-            <td><?php echo FormatoTexto::utf8Minusculas($cursada['NOMBRE']) ?></td>
-            <td><?php echo $cursada['ANO_CURSADA'] ?></td>
-            <td><?php if($cursada['APROBADA']==1) echo 'Aprobada';else echo 'sin Aprobar' ?></td>
+            <td><?php echo FormatoTexto::utf8Minusculas($cursada->nombre) ?></td>
+            <td><?php echo $cursada->ano_cursada ?></td>
+            <td><?php if($cursada->aprobada==1) echo 'Aprobada';else echo 'sin Aprobar' ?></td>
             <td><?php 
-                if(in_array($cursada['ID_ASIGNATURA'], $finalesAprobados)){
+    
+                if(in_array($cursada->id_asignatura, $finalesAprobados)){
                     echo "Aprobada";
                 }else echo "Sin aprobar/rendir";
             ?></td>

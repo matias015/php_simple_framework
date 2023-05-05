@@ -18,8 +18,8 @@
         <?php 
         foreach($examenes as $examen){ ?>
         <tr>    
-            <td><?php echo FormatoTexto::utf8Minusculas($examen['nombre']) ?></td>
-            <td><?php echo $examen['nota'] ?></td>
+            <td><?php echo FormatoTexto::utf8Minusculas($examen->nombre) ?></td>
+            <td><?php echo $examen->nota ?> </td>
         </tr>
         <?php } ?>
     </table>

@@ -1,6 +1,7 @@
 <?php
 
 require_once('App/config/config.php');
+require_once('Fw/Collection.php');
 
 class DB{
     static $pdo;
@@ -31,7 +32,8 @@ class DB{
       
       if(count($query) < 1){
         return false;
-      }else return $query[0];
+      }else return Collection::toObject($query[0]);
+
     }
 
 
@@ -42,6 +44,7 @@ class DB{
       $stmt->execute($params);
 
       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $result = Collection::create($result);
 
       if($save) {
         DB::$lastResult = $result;

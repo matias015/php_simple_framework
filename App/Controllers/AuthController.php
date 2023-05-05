@@ -59,7 +59,7 @@ class AuthController{
         if(!$alumno) Request::redirect('/login', ['errores'=>['Credenciales invalidas']]);
         
 
-        if($alumno['verified'] == 0) {
+        if($alumno -> verified == 0) {
             MailService::verificacionMail(Request::value('email'));
             Request::redirect('/email-verify');
         }
@@ -75,7 +75,7 @@ class AuthController{
     }
 
     static function resetPasswordView(){
-        $correoActual = Auth::isLogin()? Auth::user()['CORREO']:"";
+        $correoActual = Auth::isLogin()? Auth::user()->correo:"";
         include_once('App/Views/Auth/cambio-password.php');
     }
 
@@ -86,12 +86,12 @@ class AuthController{
 
     static function cambiarPassword(){
         $resetData = ResetPassword::buscarMailConToken(Request::value('token'));
-        if(!$resetData) Request::redirect('/reset-password');
+        if(!$resetData) Request::redirect('/reset-password',['mensajes'=>['token invalido']]);
         
         $newPw = Request::value('password');
 
-        Alumno::setPasword([$resetData['email'],$newPw]);
-        ResetPassword::borrar($resetData['id']);
+        Alumno::setPasword([$resetData->email,$newPw]);
+        ResetPassword::borrar($resetData->id);
 
         Request::redirect('/login',['mensajes'=>['tu contraseña se ha restablecido']]);
     }

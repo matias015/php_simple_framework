@@ -24,18 +24,18 @@
             $yaAnotado=false; 
             $sinMesas=false;
 
-            $mesas = Mesa::materia($materia['ID_ASIGNATURA']);
+            $mesas = Mesa::materia($materia->id_asignatura);
             
             if(count($mesas)<1)$sinMesas=true;
             else {
                 foreach($mesas as $mesa){
-                    if(in_array($mesa['ID_MESA'],$yaAnotadas)) $yaAnotado=$mesa;
+                    if(in_array($mesa->id_mesa,$yaAnotadas)) $yaAnotado=$mesa;
                 }
             }
 
             $path = $yaAnotado? "desinscripcion":"inscripciones"; 
-            
-            echo '<p>' . $materia['nombre'] . '</p>';
+
+            echo '<p>' . $materia->nombre . '</p>';
             echo '<form action="/alumno/'. $path .'" method="post" style="display:flex; flex-direction:column;">';
             CSRF::field();
             

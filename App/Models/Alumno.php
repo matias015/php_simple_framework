@@ -54,7 +54,7 @@ class Alumno extends DB{
         foreach($sinRendir as $materia){
             $puede=true;
 
-            $correlativas = correlativa::de($materia['ID_ASIGNATURA']);
+            $correlativas = correlativa::de($materia -> id_asignatura);
             if(count($correlativas)>0){
                 foreach($correlativas as $correlativa){
                     if(!in_array($correlativa,$exAprob)){

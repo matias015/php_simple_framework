@@ -23,7 +23,9 @@ class Migrations{
         ADD `verified` INT NOT NULL DEFAULT '0' AFTER `mail_token`, 
         ADD `password` VARCHAR(100) NULL AFTER `verified`;",
 
-        'create_carrera_default_table' => "CREATE TABLE `movedb`.`carrera_default` (`id` INT NOT NULL AUTO_INCREMENT , `id_alumno` INT NOT NULL , `id_carrera` INT NOT NULL , PRIMARY KEY (`id`))"
+        'create_carrera_default_table' => "CREATE TABLE `movedb`.`carrera_default` (`id` INT NOT NULL AUTO_INCREMENT , `id_alumno` INT NOT NULL , `id_carrera` INT NOT NULL , PRIMARY KEY (`id`))",
+
+        'create_feriados_table' => "CREATE TABLE `movedb`.`dias_no_habiles` (`id` INT NOT NULL AUTO_INCREMENT , `fecha` DATE NOT NULL , PRIMARY KEY (`id`), UNIQUE (`fecha`))"
     ]; 
     
 }    

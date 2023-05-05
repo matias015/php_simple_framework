@@ -13,5 +13,7 @@
         <input name="email" value="<?php echo $correoActual ?>">
         <input type="submit" value="Enviar mail">
     </form>
+
+    <?php include_once('App/Views/Componentes/mensajes.php') ?>
 </body>
 </html>

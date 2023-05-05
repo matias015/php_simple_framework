@@ -18,7 +18,8 @@ class Auth extends DB{
     }
 
     static function login($user, $remember=false) {
-        $_SESSION['user_id'] = $user[Auth::$authIdField];
+        print_r(123132);
+        $_SESSION['user_id'] = $user -> {Auth::$authIdField};
         $_SESSION['logged_at'] = time();
 
         if ($remember) {
@@ -89,7 +90,7 @@ class Auth extends DB{
     }
 
     static function id(){
-        return Auth::user()[Auth::$authIdField];
+        return Auth::user()->{Auth::$authIdField};
     }
 
     static public function deleteExpiredTokens(){

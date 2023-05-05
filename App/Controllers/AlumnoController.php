@@ -24,25 +24,26 @@ class AlumnoController{
 
     static function cursadas(){
         isLogin::check();
-        $cursadas = Cursada::alumno();
-        $finalesAprobados = ArrayFlatter::flat(Examen::aprobados());
 
-        include_once('App/Views/cursadas.php');
+        Response::view('cursadas', [
+            'cursadas' => Cursada::alumno(),
+            'finalesAprobados' => ArrayFlatter::flat(Examen::aprobados())
+        ]);
     }
 
     static function examenes(){
         isLogin::check();
-        $examenes = Examen::alumno();
-
-        include_once('App/Views/examenes.php');
+        Response::view('examenes', ['examenes' => Examen::alumno()]);
     }
 
     static function inscripciones(){
         isLogin::check();
-        $materias = Alumno::inscribibles();
 
+        $materias = Alumno::inscribibles();
         Session::set('alumno_inscribibles', $materias);
+        
         $yaAnotadas = Examen::alumnoAnotado();
+        
         include_once('App/Views/inscripciones.php');
     }
     
@@ -57,8 +58,8 @@ class AlumnoController{
 
         foreach($inscribibles as $materia){
 
-            if(Mesa::materia($materia['ID_ASIGNATURA']) == $mesa){
-                
+            if(in_array($mesa, Mesa::disponibles($materia->id_asignatura))){              
+
                 $puede = true;
                 break;
             }

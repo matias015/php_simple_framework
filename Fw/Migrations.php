@@ -30,7 +30,7 @@ class Migrator{
             $exists = false;
 
             foreach($migrationsData as $migration){
-                if($migration['name'] === $name) $exists=true;
+                if($migration->name === $name) $exists=true;
             }
             
             if(!$exists){

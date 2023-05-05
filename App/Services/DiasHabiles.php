@@ -15,11 +15,14 @@ static function desdeHoyHasta($hasta){
             $period = new DatePeriod($end, new DateInterval('P1D'), $start);
             
             // almacenado como matriz, por lo que puede agregar más de una fecha feriada
-            $holidays = array('2023-05-03');
-
+            $holidays = ArrayFlatter::flat(DiaNoHabil::todos()); //array('2023-05-03');
+            //
             $dias = 0;
             foreach($period as $dt) {
-                
+                echo "<br>";
+                print_r($dt->format('Y-m-d'));
+                echo "<br>";
+                print_r($holidays);
                 $curr = $dt->format('D');
                 // obtiene si es Sábado o Domingo
                 if($curr == 'Sates'|| $curr == 'Sat' || $curr == 'Sun') {
