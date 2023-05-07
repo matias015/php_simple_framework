@@ -16,4 +16,9 @@ class isLogin{
         }
     }
 
+    static function esAdmin(){
+        if(Session::exists('Admin')) return;
+        else Request::redirect('/admin/login');
+    }
+
 }

@@ -25,5 +25,11 @@ Route::get('/alumno/inscripciones', function(){ AlumnoController::inscripciones(
 Route::post('/alumno/inscripciones', function(){ AlumnoController::inscribirAlumno(); });
 Route::post('/alumno/desinscripcion', function(){ AlumnoController::desinscribirAlumno(); });
 
+Route::get('/admin/login', function(){ AdminController::loginView(); });
+Route::post('/admin/login', function(){ AdminController::login(); });
+Route::get('/admin/logout', function(){ AdminController::logout(); });
+
+Route::get('/admin',function(){ AdminController::index() ;});
 Route::get('/admin/dias', function(){ AdminController::noHabiles(); });
 Route::post('/admin/dias/agregar', function(){ AdminController::agregarDia(); });
+Route::post('/admin/dias/eliminar', function(){ AdminController::eliminarDia(); });

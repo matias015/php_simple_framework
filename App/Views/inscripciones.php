@@ -23,13 +23,11 @@
         foreach($materias as $materia){
             $yaAnotado=false; 
             $sinMesas=false;
-
-            $mesas = Mesa::materia($materia->id_asignatura);
             
-            if(count($mesas)<1)$sinMesas=true;
+            if(count($materia->mesas)<1)$sinMesas=true;
             else {
-                foreach($mesas as $mesa){
-                    if(in_array($mesa->id_mesa,$yaAnotadas)) $yaAnotado=$mesa;
+                foreach($materia->mesas as $mesa){
+                    if(in_array($mesa->id_mesa, $yaAnotadas)) $yaAnotado=$mesa;
                 }
             }
 
@@ -44,7 +42,7 @@
             }
             else if($sinMesas) echo 'No hay mesas';
             else{    
-                foreach($mesas as $mesa){
+                foreach($materia -> mesas as $mesa){
                     include('App/Views/Componentes/inscripcion-form.php');
                 }
             }

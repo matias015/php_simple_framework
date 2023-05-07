@@ -25,11 +25,6 @@ class Query{
         return $this;
     }
 
-    static function all(){
-        $instance = new Query();
-        $instance -> model = get_called_class();
-        return DB::query('SELECT * FROM ' . $instance -> getLocalTable());
-    }
 
     private function needsFromStatement(){
         if($this -> needsFromStatement){
@@ -105,6 +100,18 @@ class Query{
         $instance -> needsFromStatement = true;
 
         return $instance;
+    }
+
+    static function all(...$fields){        
+        $instance = new Query();
+        $instance -> model = get_called_class();
+        $instance -> setQueryType("SELECT");
+        $instance -> needsFromStatement = true;
+
+        if(!$fields) $instance -> addToFinalQuery(" *");
+        else $instance -> addToFinalQuery(" " . $instance->parseList($fields));
+        
+        return $instance->exec();
     }
 
     public function set($f,$v){

@@ -40,8 +40,20 @@ class AlumnoController{
         isLogin::check();
 
         $materias = Alumno::inscribibles();
+    
+        foreach($materias as $key => $materia){
+            $mesas = Mesa::materia($materia->id_asignatura);
+            foreach($mesas as $key => $mesa){
+                    $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
+                    $mesas[$key] = $mesa;
+            }
+            $conMesa = $materia;
+            $conMesa -> {'mesas'} = $mesas;
+            $materias[$key] = $conMesa;
+        }
+
         Session::set('alumno_inscribibles', $materias);
-        
+
         $yaAnotadas = Examen::alumnoAnotado();
         
         include_once('App/Views/inscripciones.php');
