@@ -3,16 +3,46 @@
 class Query{
 
     private $query = "";
+    
+    protected $model;
     protected $table;
+
     private $queryType = "SELECT";
     private $isFirstSetStatement = true;
     private $conditions = [];
     private $tables = [];
     private $fields = [];
     private $params = [];
+    private $needsFromStatement = false;
 
     private function getQueryType(){
         return $this -> queryType;
+    }
+
+    private function setFromStatement(){
+        $this -> addToFinalQuery(" FROM " . $this->getLocalTable());
+        $this -> needsFromStatement = false;
+        return $this;
+    }
+
+    static function all(){
+        $instance = new Query();
+        $instance -> model = get_called_class();
+        return DB::query('SELECT * FROM ' . $instance -> getLocalTable());
+    }
+
+    private function needsFromStatement(){
+        if($this -> needsFromStatement){
+            $this -> setFromStatement();
+            $this -> needsFromStatement = false;
+        }
+        return $this;
+    }
+
+    private function getLocalTable(){
+        $inst = new $this->model();
+        if(!$inst -> table) return $this->model . "s";
+        return $inst -> table;
     }
 
     private function setQueryType($type){
@@ -32,29 +62,47 @@ class Query{
         $this -> params[] = $v;
     }
 
-    static function select(...$fields){
+    static function select(...$fields){        
         $instance = new Query();
+        $instance -> model = get_called_class();
         $instance -> setQueryType("SELECT");
+        $instance -> needsFromStatement = true;
         
         $instance -> addToFinalQuery(" " . $instance->parseList($fields));
 
         return $instance;
     }
 
-    static function insert($table){
+    static function insert($table=null){
         $instance = new Query();
         $instance -> setQueryType("INSERT INTO");
-        
+        if(!$table){
+            $instance -> model = get_called_class();
+            $table = $instance -> getLocalTable();
+        }
         $instance -> addToFinalQuery(" " . $table);
 
         return $instance;
     }
 
-    static function update($table){
+    static function update($table=null){
         $instance = new Query();
         $instance -> setQueryType("UPDATE");
-
+        if(!$table) {
+            $instance -> model = get_called_class();
+            $table = $instance -> getLocalTable();
+        }
         $instance -> addToFinalQuery(" $table");
+
+        return $instance;
+    }
+
+    static function delete($table=null){
+        $instance = new Query();
+        $instance -> model = get_called_class();
+        
+        $instance -> setQueryType("DELETE");
+        $instance -> needsFromStatement = true;
 
         return $instance;
     }
@@ -102,11 +150,16 @@ class Query{
 
     public function from(...$tables){
         $tables = $this -> parseList($tables);
-        $this -> addToFinalQuery(" FROM " . $tables);
+        if($this -> needsFromStatement) $this -> addToFinalQuery(" FROM " . $tables);
+        else $this -> addToFinalQuery(", " . $tables);
+        $this -> needsFromStatement = false;
         return $this;
     }
 
     private function conditionAdder($type,$field,$op,$value=null){
+
+        $this -> needsFromStatement();
+
         if(!$value) {
             $value = $op; 
             $op = "=";
@@ -143,38 +196,46 @@ class Query{
     }
 
     public function join($table, $f1, $f2){
+        $this -> needsFromStatement();
         $this -> addToFinalQuery(" JOIN $table ON $f1 = $f2");
         return $this;
     }
  
     public function leftJoin($table, $f1, $f2){
+        $this -> needsFromStatement();
         $this -> addToFinalQuery(" LEFT JOIN $table ON $f1 = $f2");
         return $this;
     }
     public function rightJoin($table, $f1, $f2){
+        $this -> needsFromStatement();
         $this -> addToFinalQuery(" RIGHT JOIN $table ON $f1 = $f2");
         return $this;
     }
 
     public function group($f){
+        $this -> needsFromStatement();
         $this -> addToFinalQuery(" GROUP BY $f");
         return $this;
     }
 
     public function order($f, $type=''){
+        $this -> needsFromStatement();
         $this -> addToFinalQuery(" ORDER BY $f $type");
         return $this;
     }
 
     public function exec(){  
+        $this -> needsFromStatement();
         return DB::query($this->query,$this->params);
     }
 
     public function getQueryString(){
+        $this -> needsFromStatement();
         return $this->query;
     }
     
     public function first(){  
+        $this -> needsFromStatement();
         return DB::queryFirst($this->query, $this->params);
     }
 

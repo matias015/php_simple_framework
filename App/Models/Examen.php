@@ -3,34 +3,34 @@ require_once('Query.php');
 require_once('Fw/Auth.php');
 require_once('App/Services/FlatArray.php');
 
-class Examen extends DB{
+class Examen extends Query{
+
+    protected $table='examenes';
 
     static function aprobados(){
         //examenes aprobados
-        return Query::select('id_asignatura')
-            -> from('examenes')
+        return Examen::select('id_asignatura')
             -> where('id_alumno',Auth::id())
             -> andWhere('nota','>=',':4')
             -> exec();
     }
 
     static function yaAnotado($mesa){
-        return Query::select('*')
-            -> from('examenes')
+        return Examen::select('*')
             -> where('id_mesa', $mesa)
             -> andWhere('id_alumno', Auth::id())
-            -> exec();
-        
+            -> exec();   
     }
 
     static function anotarAlumno($mesa){
-        Query::insert('examenes')
+        Examen::insert()
             -> fields('id_examenes', 'id_mesa', 'id_alumno', 'id_asignatura', 'aprobado', 'nota', 'tipofinal', 'llamado', 'libro', 'acta', 'fecha', 'equivalencias')
             -> values(':NULL', $mesa, Auth::id(), ':NULL', ':NULL', '0.00', ':NULL', ':NULL', ':NULL', ':NULL', ':NULL', ':NULL')
             -> exec();
     }
 
     static function bajar($mesa){
+        
         DB::query("DELETE FROM `examenes` WHERE ID_MESA = :id_mesa AND ID_ALUMNO=:id_alumno",
         ['id_mesa'=>$mesa, 'id_alumno'=>Auth::id()]);
     }
@@ -48,19 +48,19 @@ class Examen extends DB{
     }
 
     static function alumnoAnotado(){
-        $id = Auth::id();
-        $mesas = DB::query("SELECT id_mesa FROM examenes WHERE examenes.id_alumno=?",[$id]);
+        $mesas = Examen::select('id_mesa')
+            -> where('id_alumno',Auth::id())
+            -> exec();
         return ArrayFlatter::flat($mesas);
     } 
 
     static function puedeBajarse($mesa){
-        $id = Auth::user()['ID_ALUMNO'];
         $mesas = DB::query("SELECT id_mesa 
             FROM examenes, mesa
             WHERE examenes.id_alumno = ?
             AND mesa.id_mesa = examenes.id_mesa
             AND fecha > NOW() + INTERVAL 1 DAY
-        ",[$id]);
+        ",[Auth::id()]);
 
         return ArrayFlatter::flat($mesas);
     }

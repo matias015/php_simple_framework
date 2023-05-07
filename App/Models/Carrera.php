@@ -1,26 +1,32 @@
 <?php 
 
 include_once('App/Services/FlatArray.php');
+include_once('App/Models/Query.php');
 
-class Carrera{
+class Carrera extends Query{
+
+    protected $table = "carrera";
+
     static function todas(){
-        return  ArrayFlatter::flat(DB::query("SELECT id_carrera FROM carrera"));
+        return  ArrayFlatter::flat(Carrera::select('id_carrera'));
     }
 
     static function deAlumno(){
         $carrerasIds = Carrera::todas();
 
-        return DB::query("SELECT car.id_carrera, car.nombre
-        FROM carrera car,asignaturas asig,cursada curs
-        WHERE car.id_carrera = asig.id_carrera
-        AND asig.id_asignatura = curs.id_asignatura
-        AND curs.id_alumno = :id GROUP BY car.id_carrera
-        ", ['id'=> Auth::id()]);
+        return Carrera::select('carrera.id_carrera', 'carrera.nombre')
+            -> join('asignaturas', 'asignaturas.id_carrera', 'carrera.id_carrera')
+            -> join('cursada', 'cursada.id_asignatura', 'asignaturas.id_asignatura')
+            -> where('cursada.id_alumno', Auth::id()) 
+            -> group('carrera.nombre')
+            -> exec();
     }
 
     static function setDefault($idCarrera){
-        $userId = Auth::id();
-        $yaExiste = DB::queryFirst("SELECT id FROM carrera_default WHERE id_alumno=:id_alumno",['id_alumno'=>$userId]);
+        $yaExiste = Query::select('id')
+            -> from('carrera_default')
+            -> where('id_alumno', Auth::id())
+            -> first();
         
         if(!$yaExiste){
             Query::insert('carrera_default')

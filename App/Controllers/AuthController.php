@@ -13,7 +13,7 @@ class AuthController{
     
     static function registroView(){
         isLogin::not();
-        include_once('App/Views/Auth/registro.php');
+        Response::view('Auth.registro');
     }
 
     // ok
@@ -41,7 +41,7 @@ class AuthController{
     static function loginView(){
         isLogin::not();
         
-        include_once('App/Views/Auth/login.php');
+        Response::view('Auth.login');
     }
 
 
@@ -76,12 +76,12 @@ class AuthController{
 
     static function resetPasswordView(){
         $correoActual = Auth::isLogin()? Auth::user()->correo:"";
-        include_once('App/Views/Auth/cambio-password.php');
+        Response::view('Auth.cambio-password');
     }
 
     static function resetPassword(){
         MailService::resetPwPin(Request::value('email'));
-        include_once('App/Views/Auth/nueva-contra.php');
+        Response::view('Auth.nueva-contra');
     }
 
     static function cambiarPassword(){
@@ -90,7 +90,7 @@ class AuthController{
         
         $newPw = Request::value('password');
 
-        Alumno::setPasword([$resetData->email,$newPw]);
+        Alumno::setPasword(['email'=>$resetData->email,'password'=>$newPw]);
         ResetPassword::borrar($resetData->id);
 
         Request::redirect('/login',['mensajes'=>['tu contraseña se ha restablecido']]);

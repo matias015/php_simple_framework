@@ -1,12 +1,17 @@
 <?php
 
-class DiaNoHabil{
+include_once('Query.php');
+
+class DiaNoHabil extends Query{
+
+    protected $table = "dias_no_habiles";
+
     static function todos(){
-        return DB::query("SELECT fecha FROM dias_no_habiles");
+        return DiaNoHabil::select('fecha');
     }
 
     static function agregar($fecha){
-        return DB::query("INSERT INTO dias_no_habiles VALUES(NULL,?)",[$fecha]);
+        DiaNoHabil::insert()->values(':NULL',$fecha);
     }
 
 }

@@ -6,23 +6,21 @@ require_once('App/Models/Examen.php');
 require_once('App/Models/Cursada.php');
 require_once('App/Models/Correlativa.php');
 
-class Alumno extends DB{
+class Alumno extends Query{
 
     static function sinRegistrar($correo){
-        $alumno = Query::select('*')
-            -> from('alumnos')
+        $alumno = Alumno::select('*')
             -> where('correo', $correo)
             -> andWhere('password','IS',':NULL')
             -> exec();
-        //$alumno = DB::queryFirst("SELECT * FROM alumnos WHERE CORREO=:correo AND password IS NULL",$correo,true);
+
         return $alumno;
     }
 
     static function buscarMailPassword($data){
         $data['password'] = md5($data['password']);
 
-        $user = Query::select("*")
-            -> from("alumnos")
+        $user = Alumno::select("*")
             -> where('correo', $data['correo'])
             -> andWhere('password', $data['password'])
             -> first();
@@ -34,14 +32,14 @@ class Alumno extends DB{
     static function setPasword($data){        
         $data['password'] = md5($data['password']);
 
-        return Query::update('alumnos')
+        return Alumno::update()
             -> set('password', $data['password'])
             -> where('correo',$data['email'])
             -> exec();
     }
 
     static function setVerificacionToken($mail,$token){
-        Query::update('alumnos')
+        Alumno::update()
             -> set('mail_token', $token)
             -> where('correo', $mail)
             -> exec();
@@ -52,7 +50,7 @@ class Alumno extends DB{
     }
     
     static function verificarMail($mailToken){
-        Query::update('alumnos')->set('verified',':1')->where('mail_token',$mailToken)->exec();
+        Alumno::update()->set('verified',':1')->where('mail_token',$mailToken)->exec();
         //DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
         Alumno::unsetVerificacionToken($mailToken);
     }
@@ -82,13 +80,5 @@ class Alumno extends DB{
         }
         return $posibles;
     }
-
-    static function yaEstaEnMesa(){
-        $id = Auth::user()['ID_USUARIO'];
-
-        //DB::query();
-    }
-
-    
 
 }

@@ -1,14 +1,16 @@
 <?php
 
 include_once('App/Services/FlatArray.php');
+require_once('Query.php');
 
-class Mesa{
+class Mesa extends Query{
+    protected $table = "mesa";
+
     static function materia($id){
-        return DB::query("SELECT * 
-            FROM mesa
-            WHERE mesa.id_asignatura=?
-            AND FECHA>NOW()
-        ",[$id]);
+        return Mesa::select('*')
+            -> where('id_asignatura', $id) 
+            -> andWhere('fecha','>',':NOW()')
+            -> exec();
     }
 
     static function disponibles($asignatura){

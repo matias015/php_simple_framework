@@ -1,11 +1,12 @@
 <?php
 include_once('Query.php');
 
-class correlativa{
-    static function de($id){
+class correlativa extends Query{
 
-        return Query::select('asignatura_correlativa')
-            -> from('correlatividad')
+    protected $table = 'correlatividad';
+
+    static function de($id){
+        return correlativa::select('asignatura_correlativa')
             -> where('id_asignatura',$id)
             -> exec();
     }
