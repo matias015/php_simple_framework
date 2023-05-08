@@ -11,7 +11,7 @@
     <form action="/admin/dias/agregar" method="post">
         <?php CSRF::field() ?>
         <input type="date" name="fecha">
-        <input type="text" placeholder="10-5, 25-5, 26-5, ..." name="lista">
+        <input type="date" name="end">
         <input type="submit" value="anotar">
     </form>
     <ul>

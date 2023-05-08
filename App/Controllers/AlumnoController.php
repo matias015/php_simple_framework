@@ -10,18 +10,23 @@ include_once('Fw/Response.php');
 
 class AlumnoController{
 
+    /**
+     * Informacion basica del alumno
+     */
     static function informacion(){
         isLogin::check();
-
-        $carreras = Carrera::deAlumno();
-        $default = Carrera::getDefault();
-        
-        $datos = Auth::user();
-        
-        Response::view('informacion', ['carreras'=>$carreras,'default'=>$default,'datos'=>$datos]);
-        //include_once('App/Views/informacion.php');
+   
+        Response::view('informacion', [
+            'carreras' => Carrera::deAlumno(),
+            'default' => Carrera::getDefault(),
+            'datos' => Auth::user()
+        ]);
     }
 
+    /**
+     * Cursadas que ha y esta realizando
+     * Tambien informacion sobre si ha rendido el final o no
+     */
     static function cursadas(){
         isLogin::check();
 
@@ -31,34 +36,47 @@ class AlumnoController{
         ]);
     }
 
+    /**
+     * Todos los examenes que ha rendido
+     */
     static function examenes(){
         isLogin::check();
         Response::view('examenes', ['examenes' => Examen::alumno()]);
     }
 
+    /**
+     * Pagina para inscribirse y bajarse de las mesas
+     */
     static function inscripciones(){
         isLogin::check();
 
+        // materias a las que se puede inscibir junto con sus mesas
         $materias = Alumno::inscribibles();
-    
+
+        // a cada mesa agregar los dias habiles que faltan
         foreach($materias as $key => $materia){
             $mesas = Mesa::materia($materia->id_asignatura);
+            
             foreach($mesas as $key => $mesa){
-                    $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
-                    $mesas[$key] = $mesa;
+                $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
+                $mesas[$key] = $mesa;
             }
-            $conMesa = $materia;
-            $conMesa -> {'mesas'} = $mesas;
-            $materias[$key] = $conMesa;
+
+            $materia -> {'mesas'} = $mesas;
+            $materias[$key] = $materia;
         }
 
+        // cache (?
         Session::set('alumno_inscribibles', $materias);
 
         $yaAnotadas = Examen::alumnoAnotado();
         
         include_once('App/Views/inscripciones.php');
     }
-    
+
+    /**
+     * Inscribe al alumno en la mesa seleccionada [post]
+     */
     static function inscribirAlumno(){
         isLogin::check();
 
@@ -66,18 +84,24 @@ class AlumnoController{
 
         $inscribibles = Session::exists('alumno_inscribibles')? Session::get('alumno_inscribibles') : Alumno::inscribibles();
         
-        $puede = false;
+        $noPuede = true;
+        $finBusqueda = false;
 
+        // la materia que selecciono esta en las que puede inscribirse
+        // y no caduco la fecha de inscripcion
         foreach($inscribibles as $materia){
+            if($finBusqueda) break;
 
-            if(in_array($mesa, Mesa::disponibles($materia->id_asignatura))){              
-
-                $puede = true;
-                break;
+            foreach($materia->mesas as $mesaMateria){
+                if($mesaMateria->id_mesa === $mesa){
+                    if(DiasHabiles::desdeHoyHasta($mesaMateria->fecha) >= 2) $noPuede = true;
+                    else break;
+                    $finBusqueda=true;
+                }
             }
         }
 
-        if(!$puede) Request::redirect('/alumno/inscripciones',['errores' => ['No puedes anotarte a esta mesa']]);
+        if($noPuede) Request::redirect('/alumno/inscripciones',['errores' => ['No puedes anotarte a esta mesa']]);
 
         if(Examen::yaAnotado($mesa)) Request::redirect('/alumno/inscripciones',['errores' => ['Ya estas anotado en esta mesa']]);
 
@@ -86,12 +110,26 @@ class AlumnoController{
         Request::redirect('/alumno/inscripciones',['mensajes'=>['Te has anotado a la mesa.']]);
     }
 
+    /**
+     * Baja a un alumno de una mesa [post]
+     */
     static function desinscribirAlumno(){
         isLogin::check();
-        $mesa = Request::value('mesa');
+
+        if(!Request::has('mesa')) Request::redirect('/alumno/inscripciones');
         
-        if(!Examen::yaAnotado($mesa)) Request::redirect('/alumno/inscripcion');
+        $mesa = Mesa::select('fecha')
+            -> where('id_mesa', Request::value('mesa'))
+            -> first();
         
+        if(!Examen::yaAnotado($mesa->id_mesa)){
+            Request::redirect('/alumno/inscripciones', ['mensajes' => ['No estas inscripto en esta mesa.']]);
+        }
+        
+        if(DiasHabiles::desdeHoyHasta($mesa->fecha) <= 1){
+            Request::redirect('/alumno/inscripciones',['mensajes'=>['Timpo de desincripcion caducado.']]);
+        }
+
         Examen::bajar($mesa);
         
         Request::redirect('/alumno/inscripciones',['mensajes'=>['Te has dado de baja de la mesa.']]);

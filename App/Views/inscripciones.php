@@ -24,7 +24,7 @@
             $yaAnotado=false; 
             $sinMesas=false;
             
-            if(count($materia->mesas)<1)$sinMesas=true;
+            if(count($materia->mesas) < 1)$sinMesas=true;
             else {
                 foreach($materia->mesas as $mesa){
                     if(in_array($mesa->id_mesa, $yaAnotadas)) $yaAnotado=$mesa;
@@ -46,9 +46,9 @@
                     include('App/Views/Componentes/inscripcion-form.php');
                 }
             }
-
-            echo "<input type='submit' value=". $path . ">";
-            echo "</form>";
+                echo "<input type='submit' value=". $path . ">";
+                echo "</form>";
+            
         }
     ?>  
     

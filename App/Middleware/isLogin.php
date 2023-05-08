@@ -10,7 +10,6 @@ class isLogin{
 
     static function not(){
         if(Auth::isLogin()){
-            echo 2;
             Request::redirect('/');
             return false;
         }

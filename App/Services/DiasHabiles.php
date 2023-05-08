@@ -12,7 +12,7 @@ class DiasHabiles{
         // dias no habiles seleccionados
         $holidays = ArrayFlatter::flat(DiaNoHabil::all('fecha')); 
 
-        $dias = 0;
+        $dias = -1;
 
         foreach($period as $dt) {
             $curr = $dt->format('D');
