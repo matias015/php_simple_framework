@@ -7,7 +7,7 @@ class Mesa extends Query{
     protected $table = "mesa";
 
     static function materia($id){
-        return Mesa::select('*')
+        return Mesa::select('id_mesa', 'fecha', 'llamado')
             -> where('id_asignatura', $id) 
             -> andWhere('fecha','>',':NOW()')
             -> exec();

@@ -32,7 +32,7 @@ class Examen extends Query{
     static function bajar($mesa){
         
         DB::query("DELETE FROM `examenes` WHERE ID_MESA = :id_mesa AND ID_ALUMNO=:id_alumno",
-        ['id_mesa'=>$mesa, 'id_alumno'=>Auth::id()]);
+        ['id_mesa'=>$mesa->id_mesa, 'id_alumno'=>Auth::id()]);
     }
 
     static function alumno(){

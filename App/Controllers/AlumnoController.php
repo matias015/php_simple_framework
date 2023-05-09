@@ -52,20 +52,20 @@ class AlumnoController{
 
         // materias a las que se puede inscibir junto con sus mesas
         $materias = Alumno::inscribibles();
-
+        //print_r($materias);
         // a cada mesa agregar los dias habiles que faltan
         foreach($materias as $key => $materia){
             $mesas = Mesa::materia($materia->id_asignatura);
             
-            foreach($mesas as $key => $mesa){
+            foreach($mesas as $keyMesa => $mesa){
                 $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
-                $mesas[$key] = $mesa;
+                $mesas[$keyMesa] = $mesa;
             }
 
             $materia -> {'mesas'} = $mesas;
             $materias[$key] = $materia;
         }
-
+   
         // cache (?
         Session::set('alumno_inscribibles', $materias);
 
@@ -86,15 +86,14 @@ class AlumnoController{
         
         $noPuede = true;
         $finBusqueda = false;
-
         // la materia que selecciono esta en las que puede inscribirse
         // y no caduco la fecha de inscripcion
         foreach($inscribibles as $materia){
             if($finBusqueda) break;
 
             foreach($materia->mesas as $mesaMateria){
-                if($mesaMateria->id_mesa === $mesa){
-                    if(DiasHabiles::desdeHoyHasta($mesaMateria->fecha) >= 2) $noPuede = true;
+                if($mesaMateria->id_mesa == $mesa){
+                    if(DiasHabiles::desdeHoyHasta($mesaMateria->fecha) >= 2) $noPuede = false;
                     else break;
                     $finBusqueda=true;
                 }
@@ -118,11 +117,12 @@ class AlumnoController{
 
         if(!Request::has('mesa')) Request::redirect('/alumno/inscripciones');
         
-        $mesa = Mesa::select('fecha')
+        $mesa = Mesa::select('fecha','id_mesa')
             -> where('id_mesa', Request::value('mesa'))
             -> first();
         
         if(!Examen::yaAnotado($mesa->id_mesa)){
+            
             Request::redirect('/alumno/inscripciones', ['mensajes' => ['No estas inscripto en esta mesa.']]);
         }
         

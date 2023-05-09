@@ -3,26 +3,41 @@
 class DiasHabiles{
 
     static function desdeHoyHasta($hasta){
-        $end = new DateTime(date('Y-m-d'));
-        $start = new DateTime($hasta);
 
-        // crea un período de fecha iterable (P1D equivale a 1 día)
-        $period = new DatePeriod($end, new DateInterval('P1D'), $start);
+        date_default_timezone_set('America/Argentina/Buenos_Aires');    
         
-        // dias no habiles seleccionados
-        $holidays = ArrayFlatter::flat(DiaNoHabil::all('fecha')); 
+        // feha de hoy
+        $init = new DateTime(date("Y-m-d"));
 
-        $dias = -1;
+        // fecha ingresada
+        $mesa = new DateTime($hasta);
 
-        foreach($period as $dt) {
-            $curr = $dt->format('D');
+        // fecha ingresada en formato yyyy-mm-dd
+        $mesaString = $mesa->format('Y-m-d');
 
-            if($curr == 'Sates'|| $curr == 'Sat' || $curr == 'Sun') continue;
-            elseif (in_array($dt->format('Y-m-d'), $holidays)) continue;
+        $noHabiles = ArrayFlatter::flat(DiaNoHabil::all('fecha'));
 
+        $dias = 0;
+        for($i=0;$i<365;$i++){
+            
+            // si llegamos a la fecha pero cae dia feriado o finde retorna -1
+            if($init->format('Y-m-d') === $mesaString){
+                if(($init -> format('D') == "Sat" || $init -> format('D') == "Sun") || in_array($init->format('Y-m-d'), $noHabiles) ){
+                    return -1;
+                }
+                break;
+            }
+
+            //si es sabado o feriado no suma
+            if(($init -> format('D') == "Sat" || $init -> format('D') == "Sun") || in_array($init->format('Y-m-d'), $noHabiles) ){
+                $init -> modify('+1 day');
+                continue;
+            }
+            
             $dias++;
+            $init -> modify('+1 day');
         }
 
-            return $dias;
+        return $dias;
     }
 }
