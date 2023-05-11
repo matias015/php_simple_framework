@@ -31,10 +31,12 @@
                 }
             }
 
-            $path = $yaAnotado? "desinscripcion":"inscripciones"; 
+            $path = $yaAnotado? "alumno/desinscripcion":"alumno/inscripciones";
+            $btnTexto = $path = $yaAnotado? "inscribirme":"desinscribirnme"; 
+            $path = Route::path($path);
 
             echo '<p>' . $materia->nombre . '</p>';
-            echo '<form action="/alumno/'. $path .'" method="post" style="display:flex; flex-direction:column;">';
+            echo '<form action="'.$path.'" method="post" style="display:flex; flex-direction:column;">';
             CSRF::field();
             
             if($yaAnotado){
@@ -46,7 +48,7 @@
                     include('App/Views/Componentes/inscripcion-form.php');
                 }
             }
-                echo "<input type='submit' value=". $path . ">";
+                echo "<input type='submit' value=". $btnTexto . ">";
                 echo "</form>";
             
         }

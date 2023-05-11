@@ -6,6 +6,8 @@ class Query{
     
     protected $model;
     protected $table;
+    protected $primaryKey;
+    protected $selectable;
 
     private $queryType = "SELECT";
     private $isFirstSetStatement = true;
@@ -25,7 +27,6 @@ class Query{
         return $this;
     }
 
-
     private function needsFromStatement(){
         if($this -> needsFromStatement){
             $this -> setFromStatement();
@@ -38,6 +39,18 @@ class Query{
         $inst = new $this->model();
         if(!$inst -> table) return $this->model . "s";
         return $inst -> table;
+    }
+
+    private function getLocalSelectable(){
+        $inst = new $this->model();
+        if(!$inst -> selectable) return ["*"];
+        return $inst -> selectable;
+    }
+
+    private function getLocalPrimaryKey(){
+        $inst = new $this->model();
+        if(!$inst -> primaryKey) return "id";
+        return $inst -> primaryKey;
     }
 
     private function setQueryType($type){
@@ -60,6 +73,9 @@ class Query{
     static function select(...$fields){        
         $instance = new Query();
         $instance -> model = get_called_class();
+        
+        if(count($fields) < 1) $fields = $instance->getLocalSelectable();
+        
         $instance -> setQueryType("SELECT");
         $instance -> needsFromStatement = true;
         
@@ -110,6 +126,19 @@ class Query{
 
         if(!$fields) $instance -> addToFinalQuery(" *");
         else $instance -> addToFinalQuery(" " . $instance->parseList($fields));
+        
+        return $instance->exec();
+    }
+
+    static function id($id){        
+        $instance = new Query();
+        $instance -> model = get_called_class();
+
+        $table = $instance -> getLocalTable();
+        $pk = $instance -> getLocalPrimaryKey();
+
+        $instance -> addToFinalQuery("SELECT * FROM $table WHERE $pk = ?");
+        $instance -> addParam($id);
         
         return $instance->exec();
     }
@@ -202,21 +231,29 @@ class Query{
         return $this;
     }
 
-    public function join($table, $f1, $f2){
+    private function insertJoin($type,$table, $f1, $f2){
+        if(!$f1 && !$f2) $f1 = "$table.".$this -> getLocalPrimaryKey();
+        if(!$f2) $f2 = "$table." . explode('.',$f1)[1];
+        
         $this -> needsFromStatement();
-        $this -> addToFinalQuery(" JOIN $table ON $f1 = $f2");
+        $this -> addToFinalQuery(" $type JOIN $table ON $f1 = $f2");
         return $this;
+    }
+
+    public function join($table, $f1=null, $f2=null){
+        return $this -> insertJoin('',$table, $f1, $f2);
     }
  
-    public function leftJoin($table, $f1, $f2){
-        $this -> needsFromStatement();
-        $this -> addToFinalQuery(" LEFT JOIN $table ON $f1 = $f2");
-        return $this;
+    public function leftJoin($table, $f1=null, $f2=null){
+        return $this -> insertJoin('LEFT',$table, $f1, $f2);
     }
-    public function rightJoin($table, $f1, $f2){
-        $this -> needsFromStatement();
-        $this -> addToFinalQuery(" RIGHT JOIN $table ON $f1 = $f2");
-        return $this;
+
+    public function rightJoin($table, $f1=null, $f2=null){
+        return $this -> insertJoin('RIGHT',$table, $f1, $f2);
+    }
+
+    public function innerJoin($table, $f1=null, $f2=null){
+        return $this -> insertJoin('INNER',$table, $f1, $f2);
     }
 
     public function group($f){
@@ -232,6 +269,7 @@ class Query{
     }
 
     public function exec(){  
+        // echo $this ->query;
         $this -> needsFromStatement();
         return DB::query($this->query,$this->params);
     }

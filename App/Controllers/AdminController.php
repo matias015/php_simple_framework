@@ -53,25 +53,21 @@ class AdminController{
         isLogin::esAdmin();
 
         if(Request::has('end')) {
-            $fecha_inicio = new DateTime(Request::value('fecha'));
-            $fecha_fin = new DateTime(Request::value('end'));
+            $fechaActual = new DateTime(Request::value('fecha'));
+            $fechaFin = new DateTime(Request::value('end'));
             
             $intervalo = new DateInterval('P1D');
-
-            // rango de fechas
-            $fechas = array();
-            $fecha_actual = $fecha_inicio;
             
-            while ($fecha_actual <= $fecha_fin) {
-                $fechas[] = $fecha_actual->format('Y-m-d');
-                $fecha_actual->add($intervalo);
+            while ($fechaActual <= $fechaFin) {
+                DiaNoHabil::insert()->values(':NULL', $fechaActual->format('Y-m-d'))->exec();
+                $fechaActual->add($intervalo);
             }
 
-            foreach($fechas as $fecha){
-                DiaNoHabil::insert()->values(':NULL', $fecha)->exec();  
-            }
-
-        }else DiaNoHabil::insert()->values(':NULL', Request::value('fecha'))->exec();
+        }
+        else{
+            DiaNoHabil::insert()->values(':NULL', Request::value('fecha'))->exec();
+        }
+        
         Request::redirect('/admin/dias');
     }
 

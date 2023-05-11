@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Ingresa el mail</h1>
-    <form action="/reset-password" method="post">
+    <form action="<?php echo Route::route("/reset-password")?>" method="post">
         <?php CSRF::field() ?>
         <input name="email" value="<?php echo $correoActual ?>">
         <input type="submit" value="Enviar mail">

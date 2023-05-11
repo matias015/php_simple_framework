@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <form method="POST" action="/email-verify">
+    <form method="POST" action="<?php echo Route::route("/email-verify")?>">
         <?php CSRF::field() ?>
         <input name="token">
         <input type="submit" value="confirmar">

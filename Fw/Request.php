@@ -10,7 +10,7 @@ class Request{
           $_SESSION[$key] = $value;
         }
       }
-      header("location: $path");
+      header("location: ".Route::route($path));
       exit;
     }
 

@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Elige una nueva contraseña</h1>
-    <form action="/change-password" method="post">
+    <form action="<?php echo Route::route("/change-password")?>" method="post">
     <?php CSRF::field() ?>
         password
         <input name="password">

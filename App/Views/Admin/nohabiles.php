@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <form action="/admin/dias/agregar" method="post">
+    <form action="<?php echo Route::route("/admin/dias/agregar")?>" method="post">
         <?php CSRF::field() ?>
         <input type="date" name="fecha">
         <input type="date" name="end">
@@ -18,7 +18,7 @@
         <?php foreach($dias as $dia){ ?>
             <li><?php echo $dia->fecha ?></li>    
 
-            <form action="/admin/dias/eliminar" method="post">
+            <form action="<?php echo Route::route("/admin/dias/eliminar")?>" method="post">
                 <?php CSRF::field() ?>
                 <input type="hidden" name="fecha" value="<?php echo $dia->id ?>">
                 <button type="submit">Eliminar</button>

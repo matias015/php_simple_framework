@@ -9,7 +9,7 @@
 <body>
     <h1>Registro</h1>
 
-    <form method="POST" action="/registro">
+    <form method="POST" action="<?php echo Route::route("/registro")?>">
         email <input name="email">
         contraseña <input name="password">
         <?php CSRF::field() ?>

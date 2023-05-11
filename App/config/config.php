@@ -1,14 +1,16 @@
 <?php
 
+define("BASE_URL", '127.0.0.1/iseta_web/');
 
 define('AUTH_TABLE_NAME','alumnos');
 define('AUTH_ID_NAME','id_alumno');
 define('AUTH_TABLE_TOKENS_NAME','user_tokens');
 
-define('COOKIE_EXPIRATION_TIME','+10000 seconds');
+define('COOKIE_EXPIRATION_TIME','+2 day');
 define('SECURE_COOKIES', true);
 define('HTTP_COOKIES_ONLY', true);
 define('LOGIN_EXPIRATION_TIME', 9999100);
+define('DELETE_DUPLICATED_COOKIES', true);
 
 define('DB_TYPE','mysql');
 define('DB_USERNAME','root');

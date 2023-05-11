@@ -9,15 +9,15 @@
 <body>
     <h1>Login</h1>
 
-    <form method="POST" action="/login">
+    <form method="POST" action="<?php echo Route::route("/login") ?>">
         email <input name="correo">
         contraseña <input name="password">
         <?php CSRF::field() ?>
         <input type="submit" value="Ingresar">
     </form>
 
-    <a href="/registro">Ingresar</a><br>
-    <a href="/reset-password">Olvide mi contraseña</a>
+    <a href="<?php echo Route::route("/registro")?>">Ingresar</a><br>
+    <a href="<?php echo Route::route("/reset-password")?>">Olvide mi contraseña</a>
 
     <br><br>
 

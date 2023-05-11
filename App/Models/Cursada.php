@@ -23,9 +23,9 @@ class Cursada extends Query{
 
     static function alumno(){        
         $idCarrera = Carrera::getDefault();
-
+        
         $cursadas = Cursada::select('cursada.id_asignatura','asignaturas.nombre','ano_cursada', 'aprobada')
-            -> join('asignaturas', 'cursada.id_asignatura','asignaturas.id_asignatura')
+            -> join('asignaturas', 'cursada.id_asignatura')
             -> where('cursada.id_alumno', Auth::id())
             -> andWhere('asignaturas.id_carrera', $idCarrera)
             -> exec();

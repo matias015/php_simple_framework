@@ -7,7 +7,7 @@
     <title>Admin</title>
 </head>
 <body>
-    <form action="/admin/login" method="post">
+    <form action="<?php echo Route::route("/admin/login")?>" method="post">
         <?php CSRF::field() ?>
         <input type="text" name="password">
         <button type="submit">Ingresar</button>

@@ -8,8 +8,8 @@
 </head>
 <body>
     <ul>
-        <li><a href="/admin/dias">Dias habiles</a></li>
-        <li><a href="/admin/logout">Salir</a></li>
+        <li><a href="<?php echo Route::route("/admin/dias")?>">Dias habiles</a></li>
+        <li><a href="<?php echo Route::route("/admin/logout")?>">Salir</a></li>
     </ul>
 </body>
 </html>

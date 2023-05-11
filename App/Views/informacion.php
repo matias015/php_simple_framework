@@ -16,12 +16,12 @@
     echo '<p>' . $datos -> correo . '</p>';
     echo '<p>' . $datos -> telefono1 . '</p>';
     ?>
-    <a href="/reset-password">Restablecer mi contraseña</a>
+    <a href="<?php echo Route::route("/reset-password")?>">Restablecer mi contraseña</a>
     
 
     <h2>Mis carreras</h2>
 
-    <form action="/setear-carrera">
+    <form action="<?php echo Route::route("/setear-carrera")?>">
     
         <select name="carrera" style="height: 5vh;">
             <?php foreach($carreras as $carrera) {?>
