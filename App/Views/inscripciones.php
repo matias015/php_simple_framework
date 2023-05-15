@@ -32,8 +32,8 @@
             }
 
             $path = $yaAnotado? "alumno/desinscripcion":"alumno/inscripciones";
-            $btnTexto = $path = $yaAnotado? "inscribirme":"desinscribirnme"; 
-            $path = Route::path($path);
+            $btnTexto = $yaAnotado? "desinscribirnme":"inscribirnme"; 
+            $path = Routing::route($path);
 
             echo '<p>' . $materia->nombre . '</p>';
             echo '<form action="'.$path.'" method="post" style="display:flex; flex-direction:column;">';

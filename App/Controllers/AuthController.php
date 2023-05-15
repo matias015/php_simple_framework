@@ -88,7 +88,7 @@ class AuthController{
      */
     static function resetPasswordView(){
         $correoActual = Auth::isLogin()? Auth::user()->correo:"";
-        Response::view('Auth.cambio-password');
+        Response::view('Auth.cambio-password',compact('correoActual'));
     }
 
     /**

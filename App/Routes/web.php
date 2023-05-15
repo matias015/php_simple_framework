@@ -18,20 +18,20 @@ include_once('auth.php');
 
 Route::redirect('/alumno','/alumno/informacion');
 
-Route::get('/setear-carrera', function(){ GeneralController::setCarrera(); });
+Route::get('/setear-carrera', function(){ GeneralController::setCarrera(); })->middleware(['login']);
 
-Route::get('/alumno/informacion', function(){ AlumnoController::informacion(); })->middleware(['login']);
-Route::get('/alumno/cursadas', function(){ AlumnoController::cursadas(); });
-Route::get('/alumno/examenes', function(){ AlumnoController::examenes(); });
-Route::get('/alumno/inscripciones', function(){ AlumnoController::inscripciones(); });
-Route::post('/alumno/inscripciones', function(){ AlumnoController::inscribirAlumno(); });
-Route::post('/alumno/desinscripcion', function(){ AlumnoController::desinscribirAlumno(); });
+Route::get('/alumno/informacion', fn()=>AlumnoController::informacion())->middleware(['login']);
+Route::get('/alumno/cursadas', fn()=>AlumnoController::cursadas())->middleware(['login']);
+Route::get('/alumno/examenes', fn() => AlumnoController::examenes())->middleware(['login']);
+Route::get('/alumno/inscripciones', function(){ AlumnoController::inscripciones(); })->middleware(['login']);
+Route::post('/alumno/inscripciones', function(){ AlumnoController::inscribirAlumno(); })->middleware(['login']);
+Route::post('/alumno/desinscripcion', function(){ AlumnoController::desinscribirAlumno(); })->middleware(['login']);
 
-Route::get('/admin/login', function(){ AdminController::loginView(); });
-Route::post('/admin/login', function(){ AdminController::login(); });
-Route::get('/admin/logout', function(){ AdminController::logout(); });
+Route::get('/admin/login', function(){ AdminController::loginView(); })->middleware(['nologin']);
+Route::post('/admin/login', function(){ AdminController::login(); })->middleware(['nologin']);
+Route::get('/admin/logout', function(){ AdminController::logout(); })->middleware(['admin']);
 
-Route::get('/admin',function(){ AdminController::index() ;});
-Route::get('/admin/dias', function(){ AdminController::noHabiles(); });
-Route::post('/admin/dias/agregar', function(){ AdminController::agregarDia(); });
-Route::post('/admin/dias/eliminar', function(){ AdminController::eliminarDia(); });
+Route::get('/admin',[AdminController::class,'index'])->middleware(['admin']);
+Route::get('/admin/dias', function(){ AdminController::noHabiles(); })->middleware(['admin']);
+Route::post('/admin/dias/agregar', function(){ AdminController::agregarDia(); })->middleware(['admin']);
+Route::post('/admin/dias/eliminar', function(){ AdminController::eliminarDia(); })->middleware(['admin']);
