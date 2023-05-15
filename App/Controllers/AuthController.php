@@ -15,7 +15,7 @@ class AuthController{
      * pagina de registro
      */
     static function registroView(){
-        isLogin::not();
+        
         Response::view('Auth.registro');
     }
 
@@ -23,7 +23,7 @@ class AuthController{
      * registro [post]
      */
     static function registro(){
-        isLogin::not();
+        
 
         Validation::validate(function(){
             Validation::required('email','El correo es necesario');
@@ -46,7 +46,7 @@ class AuthController{
      * pagina de login
      */
     static function loginView(){
-        isLogin::not();
+        
         Response::view('Auth.login');
     }
 
@@ -54,8 +54,7 @@ class AuthController{
      * login [post]
      */
     static function login(){
-        isLogin::not();
-
+       
         Validation::validate(function(){
             Validation::required('correo','El correo es necesario');
             Validation::required('password','La contraseña es necesaria');

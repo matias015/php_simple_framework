@@ -12,7 +12,8 @@ define('HTTP_COOKIES_ONLY', true);
 define('LOGIN_EXPIRATION_TIME', 9999100);
 define('DELETE_DUPLICATED_COOKIES', true);
 
-define('DB_TYPE','mysql');
+define('DB_DRIVER','mysql'); //mysql : odbc
+define('ODBC_DB_PATH',"C:\\xampp\htdocs\iseta_web\base.mdb");
 define('DB_USERNAME','root');
 define('DB_PASSWORD','');
 define('DB_DBNAME','movedb');

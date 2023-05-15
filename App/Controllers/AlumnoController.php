@@ -14,7 +14,7 @@ class AlumnoController{
      * Informacion basica del alumno
      */
     static function informacion(){
-        isLogin::check();
+       
    
         Response::view('informacion', [
             'carreras' => Carrera::deAlumno(),
@@ -28,7 +28,7 @@ class AlumnoController{
      * Tambien informacion sobre si ha rendido el final o no
      */
     static function cursadas(){
-        isLogin::check();
+       
 
         Response::view('cursadas', [
             'cursadas' => Cursada::alumno(),
@@ -40,7 +40,7 @@ class AlumnoController{
      * Todos los examenes que ha rendido
      */
     static function examenes(){
-        isLogin::check();
+       
         Response::view('examenes', ['examenes' => Examen::alumno()]);
     }
 
@@ -48,7 +48,6 @@ class AlumnoController{
      * Pagina para inscribirse y bajarse de las mesas
      */
     static function inscripciones(){
-        isLogin::check();
 
         // materias a las que se puede inscibir junto con sus mesas
         $materias = Alumno::inscribibles();
@@ -78,7 +77,7 @@ class AlumnoController{
      * Inscribe al alumno en la mesa seleccionada [post]
      */
     static function inscribirAlumno(){
-        isLogin::check();
+       
 
         $mesa = Request::value('mesa');
 
@@ -113,7 +112,7 @@ class AlumnoController{
      * Baja a un alumno de una mesa [post]
      */
     static function desinscribirAlumno(){
-        isLogin::check();
+       
 
         if(!Request::has('mesa')) Request::redirect('/alumno/inscripciones');
         

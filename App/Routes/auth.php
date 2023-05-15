@@ -11,7 +11,7 @@ Route::get('email-verify', function(){ MailVerificacionController::vista(); });
 Route::post('email-verify', function(){ MailVerificacionController::verificar(); });
 
 
-Route::get('/login', function(){ AuthController::loginView(); });
+Route::get('/login', [AuthController::class,'loginView']);
 Route::post('/login', function(){ AuthController::login(); });
 
 Route::get('/logout', function(){ AuthController::logout(); });

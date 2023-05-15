@@ -11,7 +11,7 @@ include_once('App/Services/MailService.php');
 class GeneralController{
     
     static function inicio(){
-        isLogin::check();
+        //();
         Response::view('home');
     }
 
@@ -19,7 +19,7 @@ class GeneralController{
      * setear carrera default seleccionada por alumno [post]
      */
     static function setCarrera(){
-        isLogin::check();
+       
 
         $carrera_id = Request::value('carrera');
         Carrera::setDefault($carrera_id);

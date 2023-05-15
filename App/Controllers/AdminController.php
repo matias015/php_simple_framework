@@ -7,7 +7,6 @@ class AdminController{
      * pagina inicio de admin
      */
     static function index(){
-        isLogin::esAdmin();
         Response::view('Admin.index');
     }
 
@@ -22,7 +21,6 @@ class AdminController{
      * cierra sesion como admin
      */
     static function logout(){
-        isLogin::esAdmin();
         Session::delete('Admin');
         Request::redirect('/');
     }
@@ -42,7 +40,7 @@ class AdminController{
      * pagina para setear los dias feriados
      */
     static function noHabiles(){
-        isLogin::esAdmin();
+    
         Response::view('Admin/nohabiles', ['dias' => DiaNoHabil::all()]);
     }
 
@@ -50,7 +48,6 @@ class AdminController{
      * agregar dia no habil [post]
      */
     static function agregarDia(){
-        isLogin::esAdmin();
 
         if(Request::has('end')) {
             $fechaActual = new DateTime(Request::value('fecha'));
@@ -75,7 +72,6 @@ class AdminController{
      * borra dia no habil [post]
      */
     static function eliminarDia(){
-        isLogin::esAdmin();
         $fecha = Request::value('fecha');
         DiaNoHabil::delete()->where('id', $fecha)->exec();
         Request::redirect('/admin/dias');

@@ -8,16 +8,5 @@ class isLogin{
         }
     }
 
-    static function not(){
-        if(Auth::isLogin()){
-            Request::redirect('/');
-            return false;
-        }
-    }
-
-    static function esAdmin(){
-        if(Session::exists('Admin')) return;
-        else Request::redirect('/admin/login');
-    }
 
 }
