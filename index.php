@@ -7,5 +7,5 @@ require_once('Fw/Request.php');
 
 require_once('App/Routes/web.php');
 
-//
+echo 2;
 Route::dispatch();
