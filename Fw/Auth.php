@@ -18,6 +18,21 @@ class Auth extends DB{
         if(!Auth::isLogin()){
             Auth::loginWithCookie();
         }
+        if(!isset($_SESSION['_AUTH_'])) $_SESSION['_AUTH_'] = ['guard' => null,'user_id'=>null,'logged_at'=>null];
+    }
+
+    static function getTable(){
+        $guard = $_SESSION['_AUTH_']['guard'];
+        return AuthConfig::getGuards()[$guard]['table'];
+    }
+
+    static function getPrimary(){
+        $guard = $_SESSION['_AUTH_']['guard'];
+        return AuthConfig::getGuards()[$guard]['primary'];
+    }
+
+    static function getGuard(){
+        return $_SESSION['_AUTH_']['guard'];
     }
 
     /**
@@ -37,15 +52,27 @@ class Auth extends DB{
         setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
     }
 
+    static function loginGuard($guard, $user,$remember=false){
+        $data = AuthConfig::getGuards()[$guard];
+        
 
+        $_SESSION['_AUTH_']['guard'] = $guard;
+        $_SESSION['_AUTH_']['user_id'] = $user -> {$data['primary']};
+        $_SESSION['_AUTH_']['logged_at'] = time();
+
+        if ($remember) Auth::remember($user);
+
+        Auth::$user = $user;
+        return true;
+    }
 
     /**
      * make login to the user
      */
     static function login($user, $remember=false) {
 
-        $_SESSION['user_id'] = $user -> {Auth::$authIdField};
-        $_SESSION['logged_at'] = time();
+        $_SESSION['_AUTH_']['user_id'] = $user -> {Auth::$authIdField};
+        $_SESSION['_AUTH_']['logged_at'] = time();
 
         if ($remember) Auth::remember($user);
 
@@ -56,8 +83,10 @@ class Auth extends DB{
     /**
      * return if an user is login
      */
-    static function isLogin() {
-        return isset($_SESSION['user_id']);
+    static function isLogin($guard=false) {
+        $isGuard = true;
+        if($guard) $isGuard = Auth::getGuard()==$guard;
+        return isset($_SESSION['_AUTH_']['user_id']) && $isGuard;
     }
 
     /** 
@@ -110,7 +139,7 @@ class Auth extends DB{
         $tokensTable = Auth::$tokensTable;
 
         DB::query("DELETE FROM $tokensTable WHERE $tokensTable.user_id = :user_id", 
-        ['user_id'=>$_SESSION['user_id']],false);
+        ['user_id'=>$_SESSION['_AUTH_']['user_id']],false);
     }
 
     /**
@@ -122,8 +151,7 @@ class Auth extends DB{
     }
 
     static private function unsetSessionVars(){
-        unset($_SESSION['user_id']);
-        unset($_SESSION['logged_at']);
+        unset($_SESSION['_AUTH_']);
     }
 
     /**
@@ -142,7 +170,7 @@ class Auth extends DB{
      * get user data from db
      */
     static function getUserData(){
-        return DB::queryFirst('Select * FROM '.Auth::$usersTable.' WHERE '.Auth::$authIdField.' = :user_id', ['user_id'=>$_SESSION['user_id']],false);
+        return DB::queryFirst('Select * FROM '.Auth::getTable().' WHERE '.Auth::getPrimary().' = :user_id', ['user_id'=>$_SESSION['_AUTH_']['user_id']],false);
     }
 
     /**
@@ -158,7 +186,7 @@ class Auth extends DB{
      * return the id field from the actual user
      */
     static function id(){
-        return Auth::user()->{Auth::$authIdField};
+        return Auth::user()->{Auth::getPrimary()};
     }
 
         /**
