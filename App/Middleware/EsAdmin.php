@@ -2,8 +2,10 @@
 class EsAdmin{
 
     static function check(){
-        if(Session::exists('Admin')) return;
-        else Request::redirect('/admin/login');
+        if(!Auth::isLogin('admin')){
+            Request::redirect('/');
+            return false;
+        }
     }
 
 }

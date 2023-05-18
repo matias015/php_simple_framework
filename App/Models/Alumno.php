@@ -9,7 +9,7 @@ require_once('App/Models/Correlativa.php');
 class Alumno extends Query{
 
     protected $primaryKey = "id";
-    protected $selectable = ['id','dni','nombre','apellido','correo','telefono1',];
+    protected $selectable = ['id','dni','nombre','apellido','email','telefono1',];
 
     static function sinRegistrar($correo){
         $alumno = Alumno::select('*')

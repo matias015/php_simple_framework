@@ -26,7 +26,7 @@ use function PHPSTORM_META\type;
         foreach($cursadas as $cursada){ ?>
         <tr>    
             <td><?php echo FormatoTexto::utf8Minusculas($cursada->nombre) ?></td>
-            <td><?php echo $cursada->ano_cursada ?></td>
+            <td><?php echo $cursada->anio_cursada ?></td>
             <td><?php if($cursada->aprobada==1) echo 'Aprobada';else echo 'sin Aprobar' ?></td>
             <td><?php 
     

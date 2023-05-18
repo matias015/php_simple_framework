@@ -13,7 +13,7 @@
     echo '<p>' . $datos -> nombre . '</p>';
     echo '<p>' . $datos -> apellido . '</p>';
     echo '<p>' . $datos -> dni . '</p>';
-    echo '<p>' . $datos -> correo . '</p>';
+    echo '<p>' . $datos -> email . '</p>';
     echo '<p>' . $datos -> telefono1 . '</p>';
     ?>
     <a href="<?php echo Route::route("/reset-password")?>">Restablecer mi contraseña</a>
@@ -25,7 +25,7 @@
     
         <select name="carrera" style="height: 5vh;">
             <?php foreach($carreras as $carrera) {?>
-                <option <?php if($default && $default == $carrera->id_carrera) echo 'selected' ?> value="<?php echo $carrera->id_carrera ?>"><?php echo FormatoTexto::utf8Minusculas($carrera->nombre) ?></option>
+                <option <?php if($default && $default == $carrera->id) echo 'selected' ?> value="<?php echo $carrera->id_carrera ?>"><?php echo FormatoTexto::utf8Minusculas($carrera->nombre) ?></option>
             <?php } ?>
         </select>
         

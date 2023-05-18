@@ -11,7 +11,6 @@ include_once('App/Services/MailService.php');
 class GeneralController{
     
     static function inicio(){
-        //();
         Response::view('home');
     }
 

@@ -9,6 +9,7 @@
 <body>
     <form action="<?php echo Route::route("/admin/login")?>" method="post">
         <?php CSRF::field() ?>
+        <input type="text" name="username">
         <input type="text" name="password">
         <button type="submit">Ingresar</button>
     </form>

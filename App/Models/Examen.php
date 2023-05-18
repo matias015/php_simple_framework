@@ -40,7 +40,7 @@ class Examen extends Query{
 
         return Query::select('asignaturas.nombre', 'MAX(examenes.nota) as nota')
             -> from('asignaturas')
-            -> join('examenes','examenes.id_asignatura','asignaturas.id_asignatura')
+            -> join('examenes','examenes.id_asignatura','asignaturas.id ')
             -> where('examenes.id_alumno', Auth::id())
             -> andWhere('asignaturas.id_carrera', $idCarrera)
             -> group('asignaturas.nombre')

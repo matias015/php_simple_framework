@@ -2,7 +2,7 @@
 class Nologueado{
 
     static function check(){
-        if(Auth::isLogin()){
+        if(Auth::isLogin('alumno')){
             Request::redirect('/');
             return false;
         }

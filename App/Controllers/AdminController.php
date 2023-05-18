@@ -1,5 +1,9 @@
 <?php
+
+use LDAP\Result;
+
 include_once('App/Models/DiaNoHabil.php');
+include_once('App/Models/Admin.php');
 
 class AdminController{
 
@@ -21,7 +25,7 @@ class AdminController{
      * cierra sesion como admin
      */
     static function logout(){
-        Session::delete('Admin');
+        Auth::logout();
         Request::redirect('/');
     }
 
@@ -29,11 +33,14 @@ class AdminController{
      * inicia sesion [post]
      */
     static function login(){
-        if(Request::value('password') == 123){
-            Session::set('Admin',true);
-            Request::redirect('/admin');
-        }
-        else Request::redirect('/admin/login');
+
+        $admin = Admin::select('id')
+            -> where('username',Request::value('username'))
+            -> andWhere('password',Request::value('password'))
+            -> first();
+
+        Auth::loginGuard('admin',$admin);
+        Request::redirect('/admin');
     }
 
     /**

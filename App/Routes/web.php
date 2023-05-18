@@ -4,7 +4,6 @@ require_once('Fw/Route.php');
 
 require_once('App/Controllers/GeneralController.php');
 require_once('App/Controllers/AlumnoController.php');
-require_once('App/Controllers/AdminController.php');
 
 
 require_once('dev.php');
@@ -12,7 +11,7 @@ require_once('errors.php');
 
 
 
-Route::get('/', function(){ GeneralController::inicio(); })->middleware(['login']);
+Route::get('/', fn() => GeneralController::inicio());
 
 include_once('auth.php');
 
@@ -27,11 +26,5 @@ Route::get('/alumno/inscripciones', function(){ AlumnoController::inscripciones(
 Route::post('/alumno/inscripciones', function(){ AlumnoController::inscribirAlumno(); })->middleware(['login']);
 Route::post('/alumno/desinscripcion', function(){ AlumnoController::desinscribirAlumno(); })->middleware(['login']);
 
-Route::get('/admin/login', function(){ AdminController::loginView(); })->middleware(['nologin']);
-Route::post('/admin/login', function(){ AdminController::login(); })->middleware(['nologin']);
-Route::get('/admin/logout', function(){ AdminController::logout(); })->middleware(['admin']);
 
-Route::get('/admin',[AdminController::class,'index'])->middleware(['admin']);
-Route::get('/admin/dias', function(){ AdminController::noHabiles(); })->middleware(['admin']);
-Route::post('/admin/dias/agregar', function(){ AdminController::agregarDia(); })->middleware(['admin']);
-Route::post('/admin/dias/eliminar', function(){ AdminController::eliminarDia(); })->middleware(['admin']);
+include_once('App/Routes/admin.php');
