@@ -37,9 +37,10 @@ class AuthController{
 
         Alumno::setPasword(Request::values('email','password'));
 
-        MailService::verificacionMail(Request::value('email'));
+        //MailService::verificacionMail(Request::value('email'));
 
-        Request::redirect('/email-verify', ['mensajes'=>['Revisa tu correo!']]);
+        //Request::redirect('/email-verify', ['mensajes'=>['Revisa tu correo!']]);
+        Request::redirect('/alumno/informacion', ['mensajes'=>['Revisa tu correo!']]);
     }
 
     /**
@@ -59,18 +60,18 @@ class AuthController{
             Validation::required('correo','El correo es necesario');
             Validation::required('password','La contraseña es necesaria');
         });
-
+        echo 2;
         if(!Validation::success()) Request::redirect('/login',['errores'=>Validation::getErrors()]);
 
         $alumno = Alumno::buscarMailPassword(Request::values('correo','password'));
         if(!$alumno) Request::redirect('/login', ['errores'=>['Credenciales invalidas']]);
         
-        if($alumno -> verified == 0) {
-            MailService::verificacionMail(Request::value('email'));
-            Request::redirect('/email-verify');
-        }
+        // if($alumno -> verificado == 0) {
+        //     MailService::verificacionMail(Request::value('email'));
+        //     Request::redirect('/email-verify');
+        // }
 
-        Auth::login($alumno);
+        Auth::loginGuard('alumno', $alumno);
         Request::redirect('/');
     }
 
@@ -87,7 +88,7 @@ class AuthController{
      * ingresa correo que se usara para el restablecimiento
      */
     static function resetPasswordView(){
-        $correoActual = Auth::isLogin()? Auth::user()->correo:"";
+        $correoActual = Auth::isLogin()? Auth::user()->email:"";
         Response::view('Auth.cambio-password',compact('correoActual'));
     }
 

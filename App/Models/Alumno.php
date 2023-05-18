@@ -8,13 +8,13 @@ require_once('App/Models/Correlativa.php');
 
 class Alumno extends Query{
 
-    protected $primaryKey = "id_alumno";
-    protected $selectable = ['id_alumno','dni','nombre','apellido','correo','telefono1',];
+    protected $primaryKey = "id";
+    protected $selectable = ['id','dni','nombre','apellido','correo','telefono1',];
 
     static function sinRegistrar($correo){
         $alumno = Alumno::select('*')
-            -> where('correo', $correo)
-            -> andWhere('password','IS',':NULL')
+            -> where('email', $correo)
+            -> andWhere('password','0')
             -> exec();
 
         return $alumno;
@@ -24,7 +24,7 @@ class Alumno extends Query{
         $data['password'] = md5($data['password']);
 
         $user = Alumno::select("*")
-            -> where('correo', $data['correo'])
+            -> where('email', $data['correo'])
             -> andWhere('password', $data['password'])
             -> first();
 
@@ -37,7 +37,7 @@ class Alumno extends Query{
 
         return Alumno::update()
             -> set('password', $data['password'])
-            -> where('correo',$data['email'])
+            -> where('email',$data['email'])
             -> exec();
     }
 

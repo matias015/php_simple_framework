@@ -7,7 +7,8 @@
         <li><a href="<?php echo Route::route("/admin/dias") ?>">dias habiles</a></li>
         <hr>
         <li><?php echo Auth::user() -> nombre ?></li>
-        <li><a href="<?php echo Route::route("/logout") ?>">Cerrar sesion</a></li>
+        <li><a href="<?php echo Route::route("/logout") ?>">Cerrar sesion</a></li>´
+        <li>login as <?php echo Auth::getGuard() ?></li>
     </nav>
 
     

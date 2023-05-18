@@ -24,3 +24,20 @@ define('MAIL_SMTP_AUTH',true);
 define('MAIL_USERNAME','af5abb26f9dc63');
 define('MAIL_PASSWORD','fa016bcca8a71c');      
 define('MAIL_PORT',25 ); 
+
+
+class AuthConfig{
+    static function getGuards(){
+        return 
+            [
+                'alumno' => [
+                    'table' => 'alumnos',
+                    'primary' => 'id'
+                ],
+                'admin' => [
+                    'table' => 'administradores',
+                    'primary' => 'id'
+                ]
+            ];
+    }
+}
