@@ -1,5 +1,7 @@
 <?php
 
+include_once('vendor/autoload.php');
+
 Route::get('/mig', function(){
     include_once('Migrations/Migrations.php');
 });
@@ -38,4 +40,16 @@ Route::get('test',function(){
 
 Route::get('reset', function(){
     DB::query("UPDATE `alumnos` SET `password` = '0', `verificado` = '0' WHERE `alumnos`.`id` = 617");
+});
+
+
+use Dompdf\Dompdf;
+Route::get('/pdf',function(){
+    $pdf = new DOMPDF();
+    $pdf->setPaper('letter','portrait');
+    include_once('App/Views/Pdf/test.php');
+    $pdf->loadHtml(utf8_decode($data));
+    $pdf->render();
+    
+    $pdf->stream('hola.pdf');
 });

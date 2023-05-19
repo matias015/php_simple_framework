@@ -1,5 +1,6 @@
 <?php
 
+
 class Response{
 
     static function view($path, $data=[]){

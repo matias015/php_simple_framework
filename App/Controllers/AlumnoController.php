@@ -6,7 +6,7 @@ include_once('App/Models/Examen.php');
 include_once('App/Models/Mesa.php');
 include_once('Fw/Validation.php');
 include_once('App/Middleware/isLogin.php');
-include_once('Fw/Response.php');
+
 
 class AlumnoController{
 
@@ -15,7 +15,6 @@ class AlumnoController{
      */
     static function informacion(){
        
-   
         Response::view('informacion', [
             'carreras' => Carrera::deAlumno(),
             'default' => Carrera::getDefault(),
