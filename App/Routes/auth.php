@@ -6,9 +6,12 @@ require_once('App/Controllers/MailVerificacionController.php');
 Route::get('/registro', function(){ AuthController::registroView(); })->middleware(['nologin']);
 Route::post('/registro', function(){ AuthController::registro(); })->middleware(['nologin']);
 
+
+Route::get('enviar-mail', [MailVerificacionController::class, 'enviarMail']);
+
 ////////////////////
-Route::get('email-verify', function(){ MailVerificacionController::vista(); })->middleware(['nologin']);
-Route::post('email-verify', function(){ MailVerificacionController::verificar(); })->middleware(['nologin']);
+Route::get('/verificar-mail', function(){ MailVerificacionController::vista(); })->middleware(['login']);
+Route::post('/verificar-mail', function(){ MailVerificacionController::verificar(); })->middleware(['login']);
 
 
 Route::get('/login', [AuthController::class,'loginView'])->middleware(['nologin']);

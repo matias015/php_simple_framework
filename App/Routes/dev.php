@@ -34,3 +34,8 @@ Route::get('test',function(){
 
     print_r($materias);
 });
+
+
+Route::get('reset', function(){
+    DB::query("UPDATE `alumnos` SET `password` = '0', `verificado` = '0' WHERE `alumnos`.`id` = 617");
+});

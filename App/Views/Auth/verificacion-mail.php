@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-
-    <form method="POST" action="<?php echo Route::route("/email-verify")?>">
+    <a href="<?php echo Route::route("/enviar-mail")?>"><button>Enviar mail</button></a>
+    <form method="POST" action="<?php echo Route::route("/verificar-mail")?>">
         <?php CSRF::field() ?>
         <input name="token">
         <input type="submit" value="confirmar">

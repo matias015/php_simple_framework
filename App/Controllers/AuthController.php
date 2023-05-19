@@ -23,8 +23,6 @@ class AuthController{
      * registro [post]
      */
     static function registro(){
-        
-
         Validation::validate(function(){
             Validation::required('email','El correo es necesario');
             Validation::required('password','La contraseña es necesaria');
@@ -36,11 +34,10 @@ class AuthController{
         if(!$alumno) Request::redirect('/registro', ['errores' => ['Ya existe una cuenta asociada a este correo electronico o el correo no existe']]);
 
         Alumno::setPasword(Request::values('email','password'));
-
-        //MailService::verificacionMail(Request::value('email'));
-
-        //Request::redirect('/email-verify', ['mensajes'=>['Revisa tu correo!']]);
-        Request::redirect('/alumno/informacion', ['mensajes'=>['Revisa tu correo!']]);
+        
+        Auth::loginGuard('alumno', $alumno);
+        
+        Request::redirect('/verificar-mail');
     }
 
     /**
@@ -60,16 +57,13 @@ class AuthController{
             Validation::required('correo','El correo es necesario');
             Validation::required('password','La contraseña es necesaria');
         });
-        echo 2;
+        
         if(!Validation::success()) Request::redirect('/login',['errores'=>Validation::getErrors()]);
 
         $alumno = Alumno::buscarMailPassword(Request::values('correo','password'));
         if(!$alumno) Request::redirect('/login', ['errores'=>['Credenciales invalidas']]);
         
-        // if($alumno -> verificado == 0) {
-        //     MailService::verificacionMail(Request::value('email'));
-        //     Request::redirect('/email-verify');
-        // }
+        if($alumno -> verificado == 0) Request::redirect('/verificar-mail');
 
         Auth::loginGuard('alumno', $alumno);
         Request::redirect('/');

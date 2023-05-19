@@ -9,7 +9,7 @@
         <?php 
         if(Auth::isLogin('alumno')) {
             echo "<li>".Auth::user() -> nombre . " (". Auth::getGuard().")"."</li>";
-            echo "<li><a href=".Route::route('/logout') .">Cerrar sesion</a></li>";
+            echo "<li><a href=". Route::route('/logout') .">Cerrar sesion</a></li>";
         }
         ?>
 

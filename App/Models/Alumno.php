@@ -15,7 +15,7 @@ class Alumno extends Query{
         $alumno = Alumno::select('*')
             -> where('email', $correo)
             -> andWhere('password','0')
-            -> exec();
+            -> first();
 
         return $alumno;
     }
@@ -48,14 +48,8 @@ class Alumno extends Query{
             -> exec();
     }
 
-    static function unsetVerificacionToken($token){
-        DB::query("UPDATE alumnos SET alumnos.mail_token=NULL WHERE alumnos.mail_token=?",[$token]);
-    }
-    
     static function verificarMail($mailToken){
-        Alumno::update()->set('verified',':1')->where('mail_token',$mailToken)->exec();
-        //DB::query('UPDATE alumnos SET verified=1 WHERE mail_token=?',[$mailToken]);
-        Alumno::unsetVerificacionToken($mailToken);
+        Alumno::update()->set('verificado',':1')->exec();
     }
         
     // materias a las que el alumno se puede inscribir a final

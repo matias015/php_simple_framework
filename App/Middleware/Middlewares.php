@@ -3,13 +3,14 @@
 include_once('App/Middleware/isLogin.php');
 include_once('App/Middleware/NoLogueado.php');
 include_once('App/Middleware/EsAdmin.php');
-
+include_once('App/Middleware/Verificado.php');
 
 class Middlewares{
     static $registered = [
       'login' => isLogin::class,
       'nologin' => Nologueado::class,
-      'admin' => EsAdmin::class
+      'admin' => EsAdmin::class,
+      'verificado' => Verificado::class
     ];
 
     static function exec($alias){
