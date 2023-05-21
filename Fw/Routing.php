@@ -68,6 +68,7 @@ class Routing{
             }else throw new Exception("Bad action");
     }
         else{
+            echo Routing::path();exit;
             Request::redirect('/404');
         }
     }

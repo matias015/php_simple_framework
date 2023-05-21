@@ -39,5 +39,10 @@ class AuthConfig{
                     'primary' => 'id'
                 ]
             ];
-    }
+        }
+    
+        static function defaultGuard(){
+            return 'alumno';
+        }
 }
+

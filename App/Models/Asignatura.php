@@ -1,6 +1,6 @@
 <?php 
-//include_once("Query.php");
+include_once("Query.php");
 
-class Asignatura{
+class Asignatura extends Query{
 
 }

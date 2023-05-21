@@ -24,15 +24,13 @@ class Examen extends Query{
 
     static function anotarAlumno($mesa){
         Examen::insert()
-            -> fields('id_examenes', 'id_mesa', 'id_alumno', 'id_asignatura', 'aprobado', 'nota', 'tipofinal', 'llamado', 'libro', 'acta', 'fecha', 'equivalencias')
+            -> fields('id', 'id_mesa', 'id_alumno', 'id_asignatura', 'aprobado', 'nota', 'tipo_final', 'llamado', 'libro', 'acta', 'fecha', 'equivalencias')
             -> values(':NULL', $mesa, Auth::id(), ':NULL', ':NULL', '0.00', ':NULL', ':NULL', ':NULL', ':NULL', ':NULL', ':NULL')
             -> exec();
     }
 
     static function bajar($mesa){
-        
-        DB::query("DELETE FROM `examenes` WHERE ID_MESA = :id_mesa AND ID_ALUMNO=:id_alumno",
-        ['id_mesa'=>$mesa->id_mesa, 'id_alumno'=>Auth::id()]);
+        Examen::delete()->where('id_mesa', $mesa->id)->andWhere('id_alumno',Auth::id())->exec();
     }
 
     static function alumno(){

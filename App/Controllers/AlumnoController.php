@@ -5,6 +5,7 @@ include_once('App/Models/Cursada.php');
 include_once('App/Models/Examen.php');
 include_once('App/Models/Mesa.php');
 include_once('Fw/Validation.php');
+include_once('Fw/Cache.php');
 include_once('App/Middleware/isLogin.php');
 
 
@@ -49,23 +50,22 @@ class AlumnoController{
     static function inscripciones(){
 
         // materias a las que se puede inscibir junto con sus mesas
-        $materias = Alumno::inscribibles();
-        //print_r($materias);
-        // a cada mesa agregar los dias habiles que faltan
-        foreach($materias as $key => $materia){
-            $mesas = Mesa::materia($materia->id_asignatura);
-            
-            foreach($mesas as $keyMesa => $mesa){
-                $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
-                $mesas[$keyMesa] = $mesa;
-            }
+        $materias = Cache::getForLogged('inscribibles',function(){
+            $inscribibles = Alumno::inscribibles();
 
-            $materia -> {'mesas'} = $mesas;
-            $materias[$key] = $materia;
-        }
-   
-        // cache (?
-        Session::set('alumno_inscribibles', $materias);
+            foreach($inscribibles as $key => $materia){
+                $mesas = Mesa::materia($materia->id_asignatura);
+                
+                foreach($mesas as $keyMesa => $mesa){
+                    $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
+                    $mesas[$keyMesa] = $mesa;
+                }
+    
+                $materia -> {'mesas'} = $mesas;
+                $inscribibles[$key] = $materia;
+            }
+            return $inscribibles;
+        });
 
         $yaAnotadas = Examen::alumnoAnotado();
         
@@ -79,9 +79,8 @@ class AlumnoController{
        
 
         $mesa = Request::value('mesa');
+        $inscribibles = Cache::getForLogged('inscribibles',fn()=>Alumno::inscribibles());
 
-        $inscribibles = Session::exists('alumno_inscribibles')? Session::get('alumno_inscribibles') : Alumno::inscribibles();
-        
         $noPuede = true;
         $finBusqueda = false;
         // la materia que selecciono esta en las que puede inscribirse
@@ -90,7 +89,10 @@ class AlumnoController{
             if($finBusqueda) break;
 
             foreach($materia->mesas as $mesaMateria){
-                if($mesaMateria->id_mesa == $mesa){
+                
+                if($mesaMateria->id == $mesa){
+                    echo '-----------------------';
+                    
                     if(DiasHabiles::desdeHoyHasta($mesaMateria->fecha) >= 2) $noPuede = false;
                     else break;
                     $finBusqueda=true;
@@ -115,12 +117,11 @@ class AlumnoController{
 
         if(!Request::has('mesa')) Request::redirect('/alumno/inscripciones');
         
-        $mesa = Mesa::select('fecha','id_mesa')
-            -> where('id_mesa', Request::value('mesa'))
+        $mesa = Mesa::select('fecha','id')
+            -> where('id', Request::value('mesa'))
             -> first();
         
-        if(!Examen::yaAnotado($mesa->id_mesa)){
-            
+        if(!Examen::yaAnotado($mesa->id)){
             Request::redirect('/alumno/inscripciones', ['mensajes' => ['No estas inscripto en esta mesa.']]);
         }
         

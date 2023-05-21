@@ -24,12 +24,6 @@ class DB{
       if(DB_DRIVER=='mysql'){  
         DB::$pdo = new PDO("mysql:host=$host;dbname=$dbname", DB::$username, DB::$password, DB::$options);
       }
-
-      else if(DB_DRIVER=='odbc'){  
-        $db = ODBC_DB_PATH;
-        DB::$pdo = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=$db;Uid=".DB_USERNAME."; Pwd=".DB_PASSWORD);
-      }
-      else throw new Exception();
       
     }
 

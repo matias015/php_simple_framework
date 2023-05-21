@@ -4,7 +4,6 @@ class DiasHabiles{
 
     static function desdeHoyHasta($hasta){
 
-        date_default_timezone_set('America/Argentina/Buenos_Aires');    
         
         // feha de hoy
         $init = new DateTime(date("Y-m-d"));

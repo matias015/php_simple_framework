@@ -15,26 +15,33 @@ include_once('App/Services/DiasHabiles.php');
 
 include_once('App/Models/DiaNoHabil.php');
 
+include_once('Fw/Cache.php');
+
 
 Route::get('/dias', function(){
     echo DiasHabiles::desdeHoyHasta(Mesa::select('fecha')->where('id_mesa', 4452)->first()->fecha);
 });
 
 Route::get('test',function(){
-    $materias = Alumno::inscribibles();
-    
-    foreach($materias as $key => $materia){
-        $mesas = Mesa::materia($materia->id_asignatura);
-        foreach($mesas as $key => $mesa){
-                $mesa -> {'diasHabiles'} = DiasHabiles::desdeHoyHasta($mesa->fecha);
-                $mesas[$key] = $mesa;
-        }
-        $conMesa = $materia;
-        $conMesa -> {'mesas'} = $mesas;
-        $materias[$key] = $conMesa;
-    }
 
-    print_r($materias);
+    // SETEA CACHE
+    $result = Alumno::inscribibles();
+
+    Cache::setForLogged('ins',$result);
+
+    // SIN CACHE
+    Debug::performance(function(){
+        Alumno::inscribibles();
+    });
+
+    // CON CACHE
+    Debug::performance(function(){
+        print_r(
+            Cache::getForLogged('ins', fn() => Alumno::inscribibles())
+        );
+    });
+    
+
 });
 
 
@@ -52,4 +59,18 @@ Route::get('/pdf',function(){
     $pdf->render();
     
     $pdf->stream('hola.pdf');
+});
+
+include_once('App/Models/Asignatura.php');
+include_once('App/Models/Examen.php');
+Route::get('add-mesas',function(){
+    $materias = Asignatura::all();
+   
+    
+    Examen::update()->set('nota','8')->where('id_alumno',Auth::id())->exec();
+    // foreach($materias as $materia){
+    //     Mesa::insert()->values(':NULL',$materia->id,$materia->id_carrera,5,4,3,1,'2023-5-29 00:00:00','18')->exec();
+    //     Mesa::insert()->values(':NULL',$materia->id,$materia->id_carrera,5,4,3,2,'2023-6-12 00:00:00','18')->exec();
+    // }
+
 });

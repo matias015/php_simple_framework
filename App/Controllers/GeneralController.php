@@ -18,7 +18,6 @@ class GeneralController{
      * setear carrera default seleccionada por alumno [post]
      */
     static function setCarrera(){
-       
 
         $carrera_id = Request::value('carrera');
         Carrera::setDefault($carrera_id);

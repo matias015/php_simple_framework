@@ -27,7 +27,7 @@
             if(count($materia->mesas) < 1)$sinMesas=true;
             else {
                 foreach($materia->mesas as $mesa){
-                    if(in_array($mesa->id_mesa, $yaAnotadas)) $yaAnotado=$mesa;
+                    if(in_array($mesa->id, $yaAnotadas)) $yaAnotado=$mesa;
                 }
             }
 

@@ -4,10 +4,8 @@ require_once('Fw/DB.php');
 require_once('App/config/config.php');
 
 class Auth extends DB{
-    static $usersTable = AUTH_TABLE_NAME;
-    static $tokensTable = AUTH_TABLE_TOKENS_NAME;
+    
     static $token_duration_time = COOKIE_EXPIRATION_TIME;
-    static $authIdField = AUTH_ID_NAME;
 
     static $user;
 
@@ -21,16 +19,26 @@ class Auth extends DB{
         if(!isset($_SESSION['_AUTH_'])) $_SESSION['_AUTH_'] = ['guard' => null,'user_id'=>null,'logged_at'=>null];
     }
 
+    /**
+     * get table name of the actual guard
+     */
     static function getTable(){
         $guard = $_SESSION['_AUTH_']['guard'];
+ 
         return AuthConfig::getGuards()[$guard]['table'];
     }
 
+    /**
+     * get primary key of the actual guard
+     */
     static function getPrimary(){
         $guard = $_SESSION['_AUTH_']['guard'];
         return AuthConfig::getGuards()[$guard]['primary'];
     }
 
+    /**
+     * get the actual guard
+     */
     static function getGuard(){
         return $_SESSION['_AUTH_']['guard'];
     }
@@ -52,9 +60,11 @@ class Auth extends DB{
         setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
     }
 
+    /**
+     * login in a specific guard
+     */
     static function loginGuard($guard, $user,$remember=false){
         $data = AuthConfig::getGuards()[$guard];
-        
 
         $_SESSION['_AUTH_']['guard'] = $guard;
         $_SESSION['_AUTH_']['user_id'] = $user -> {$data['primary']};
@@ -62,15 +72,14 @@ class Auth extends DB{
 
         if ($remember) Auth::remember($user);
 
-        Auth::$user = $user;
         return true;
     }
 
     /**
-     * make login to the user
+     * make login to the user with the default guard
      */
     static function login($user, $remember=false) {
-
+        $_SESSION['_AUTH_']['guard'] = AuthConfig::defaultGuard();
         $_SESSION['_AUTH_']['user_id'] = $user -> {Auth::$authIdField};
         $_SESSION['_AUTH_']['logged_at'] = time();
 
@@ -100,17 +109,18 @@ class Auth extends DB{
      * get the user from the database with his token 
      */
     static function getUserWithCookieToken(){
-            $tokensTable = Auth::$tokensTable;
+            $tokensTable = AUTH_TABLE_TOKENS_NAME;
 
             $token = hash('sha256', $_COOKIE['user_token']);
 
-            $usersTable = Auth::$usersTable;
-            $idField = Auth::$authIdField;
-            
+            $usersTable = Auth::getTable();
+            $idField = Auth::getPrimary();
+            $guard = Auth::getGuard();
+        
             $user = DB::queryFirst("
-            SELECT * 
+            SELECT $idField, $tokensTable.guard 
             FROM $usersTable,$tokensTable 
-            WHERE $tokensTable.user_id = $usersTable.$idField 
+            WHERE $tokensTable.user_id = $usersTable.$idField
             AND token = :token", ['token'=>$token],false);
         
             return $user;
@@ -125,7 +135,7 @@ class Auth extends DB{
             $user = Auth::getUserWithCookieToken();
 
             if ($user) {
-                Auth::login($user);
+                Auth::loginGuard($user->guard, $user);
                 return true;
             }
         }
@@ -138,8 +148,10 @@ class Auth extends DB{
     static function deleteCookieFromDB(){
         $tokensTable = Auth::$tokensTable;
 
-        DB::query("DELETE FROM $tokensTable WHERE $tokensTable.user_id = :user_id", 
-        ['user_id'=>$_SESSION['_AUTH_']['user_id']],false);
+        DB::query("DELETE FROM $tokensTable 
+            WHERE $tokensTable.user_id = :user_id
+            AND $tokensTable.guard = ?", 
+        ['user_id'=>$_SESSION['_AUTH_']['user_id'], Auth::getGuard()], false);
     }
 
     /**
@@ -189,7 +201,7 @@ class Auth extends DB{
         return Auth::user()->{Auth::getPrimary()};
     }
 
-        /**
+    /**
      * set cookie in data base
      */
     static private function setCookieTable($user, $token){
@@ -200,9 +212,10 @@ class Auth extends DB{
 
         DB::query("
         INSERT INTO $tokensTable 
-        VALUES(NULL, :user_id,:token,:exp_date)", [
+        VALUES(NULL, :user_id,:token,:guard,:exp_date)", [
             'user_id' => $user -> {Auth::$authIdField}, 
             'token' => hash('sha256', $token),
+            'guard' => Auth::getGuard(),
             'exp_date' => $token_duration_time
         ], false);    
     }
@@ -216,8 +229,8 @@ class Auth extends DB{
     }
 
     static function deleteUserTokenFromDB($id){
-        $table = Auth::$tokensTable;
-        DB::query("DELETE FROM $table WHERE user_id = ?",[$id]);
+        $table = AUTH_TABLE_TOKENS_NAME;
+        DB::query("DELETE FROM $table WHERE user_id = ? AND guard", [$id, Auth::getGuard()]);
     }
     
 }

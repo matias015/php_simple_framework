@@ -46,9 +46,9 @@ class Carrera extends Query{
             -> where('id_alumno',Auth::id())
             -> first();
 
-        if(!$carrera || $carrera->id == 0) {
+        if(!$carrera || $carrera->id_carrera == 0) {
             return Carrera::deAlumno()[0]->id;
         }
-        else return $carrera->id;
+        else return $carrera->id_carrera;
     }
 }

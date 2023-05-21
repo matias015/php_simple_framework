@@ -21,15 +21,13 @@ class Alumno extends Query{
     }
 
     static function buscarMailPassword($data){
-        $data['password'] = md5($data['password']);
-
         $user = Alumno::select("*")
             -> where('email', $data['correo'])
-            -> andWhere('password', $data['password'])
             -> first();
 
-        if(!$user) return false;
-        else return $user;
+        if($user && password_verify($data['password'], $user->password)) return $user;
+        return false;
+
     }
 
     static function setPasword($data){        

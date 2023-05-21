@@ -1,6 +1,6 @@
 <label for="">llamado <?php echo $mesa->llamado ?>
     <?php if($mesa->diasHabiles >= 2){ ?> 
-        <input type="radio" name="mesa" value="<?php echo $mesa->id_mesa ?>">
+        <input type="radio" name="mesa" value="<?php echo $mesa->id ?>">
     <?php }else{ ?>
         Ya ha caducado el tiempo de inscripcion    
     <?php }?>
