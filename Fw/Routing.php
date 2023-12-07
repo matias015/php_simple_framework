@@ -1,9 +1,12 @@
 <?php
 
-use LDAP\Result;
+namespace Fw;
+
+use Fw\LoginIsExpired;
+
+
 
 include_once('Fw/csrfTokenMiddle.php');
-include_once('Fw/LoginExpiration.php');
 include_once('App/config/config.php');
 include_once('App/Middleware/Middlewares.php');
 

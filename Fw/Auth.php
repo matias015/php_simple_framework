@@ -1,5 +1,7 @@
 <?php
 
+namespace Fw;
+
 require_once('Fw/DB.php');
 require_once('App/config/config.php');
 

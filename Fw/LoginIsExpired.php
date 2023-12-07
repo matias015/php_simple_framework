@@ -1,5 +1,6 @@
 <?php
 
+namespace Fw;
 include_once('App/config/config.php');
 
 class LoginIsExpired{

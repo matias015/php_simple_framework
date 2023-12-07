@@ -1,5 +1,7 @@
 <?php
 
+namespace Fw;
+
 include_once('Fw/csrfTokenMiddle.php');
 include_once('Fw/LoginExpiration.php');
 include_once('App/config/config.php');
