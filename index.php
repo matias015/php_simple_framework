@@ -1,12 +1,23 @@
 <?php
 
+// date_default_timezone_set('America/Argentina/Buenos_Aires');    
+spl_autoload_register(function ($class_name) {
+    $base_dir = __DIR__."/";
+    
+    // Reemplaza los backslashes por slashes en el nombre de la clase
+    $class_name = str_replace('\\', '/', $class_name);
+    
+    // Ruta completa del archivo de la clase
+    $file = $base_dir . $class_name . '.php';
 
-date_default_timezone_set('America/Argentina/Buenos_Aires');    
+    // Verifica si el archivo existe y lo incluye
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});
 
-include_once('Fw/Autoload.php');
-
-use \Fw\Routing;
+use Framework\Route;
 
 include_once('App/Routes/web.php');
 
-Routing::dispatch();
+Route::dispatch();
