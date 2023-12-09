@@ -1,8 +1,9 @@
 <?php
 
-namespace Framework;
+namespace Framework\Database;
 
-use Framework\DB;
+
+
 
 class Query{
 

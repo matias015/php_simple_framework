@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework;
+namespace Framework\Database;
 
 /**
  * An Item is an object that contains a register in a database query result

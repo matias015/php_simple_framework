@@ -2,8 +2,9 @@
 
 namespace App\Database;
 
-use Framework\DB;
-use Framework\Query;
+use Framework\Database\Query;
+use Framework\Database\DB;
+
 
 class User extends Query{
 

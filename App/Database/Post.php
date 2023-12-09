@@ -2,8 +2,8 @@
 
 namespace App\Database;
 
-use Framework\DB;
-use Framework\Query;
+use Framework\Database\Query;
+use Framework\Database\DB;
 
 class Post extends Query{
 
