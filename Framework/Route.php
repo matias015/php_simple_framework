@@ -42,18 +42,16 @@ class Route{
 
     static function method(){
         if(isset($_POST['_method'])) return $_POST['_method'];
-        if(isset($_POST['_method'])){
-            return $_POST['_method'];
-        }
         return $_SERVER['REQUEST_METHOD'];
     }
 
     static function get($path, $callback, $mw=[]){
-        $route=[];
-        $route['path'] = $path;
-        $route['callback'] = $callback;
+        $route=[
+            'path' => $path,
+            'callback'=>$callback
+        ];
         
-        if(\count($mw)>0){
+        if(empty($mw)){
             $route['mw'] = $mw;
         }
         
@@ -61,11 +59,12 @@ class Route{
     }
 
     static function post($path, $callback, $mw=[]){
-        $route=[];
-        $route['path'] = $path;
-        $route['callback'] = $callback;
+        $route=[
+            'path' => $path,
+            'callback'=>$callback
+        ];
         
-        if(\count($mw)>0){
+        if(empty($mw)){
             $route['mw'] = $mw;
         }
         
@@ -73,11 +72,12 @@ class Route{
     }
 
     static function delete($path, $callback, $mw=[]){
-        $route=[];
-        $route['path'] = $path;
-        $route['callback'] = $callback;
+        $route=[
+            'path' => $path,
+            'callback'=>$callback
+        ];
         
-        if(\count($mw)>0){
+        if(empty($mw)){
             $route['mw'] = $mw;
         }
         
@@ -85,11 +85,12 @@ class Route{
     }
 
     static function put($path, $callback, $mw=[]){
-        $route=[];
-        $route['path'] = $path;
-        $route['callback'] = $callback;
+        $route=[
+            'path' => $path,
+            'callback'=>$callback
+        ];
         
-        if(\count($mw)>0){
+        if(empty($mw)){
             $route['mw'] = $mw;
         }
         
@@ -100,7 +101,6 @@ class Route{
         $replaced = str_replace('*','[A-Za-z0-9]+',$route);
         $replaced = str_replace('/','\/',$replaced);
     
-        $regexp = '/p1\/5\/p2/';
         $regexp = '/^'.$replaced.'$/';
 
         if (preg_match($regexp, self::path(), $matches)) {
