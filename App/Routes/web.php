@@ -1,13 +1,34 @@
 <?php
 
+use App\Database\Post;
 use App\Database\User;
 use Framework\DB;
+use Framework\Item;
 use Framework\Req;
 use Framework\Response;
 use Framework\Route;
 
 Route::get('/',function(){
-    return Response::view('index',['users'=>User::all()]);
+    $users = User::query()
+        -> selectAll()
+        -> from('users')
+        -> exec();
+
+    $posts = Post::query()
+        -> selectAll()
+        -> from('posts')
+        -> exec();
+
+    
+    print_r($users);
+    print_r($posts);
+    echo '<br><br><br>';
+    $final = Item::unifyMany($users,$posts,'id_user','posts');
+    foreach($final as $user){
+        print_r($user);
+        echo '<br><br>';
+    }
+    
 });
 
 Route::get('/edit/*',function(){

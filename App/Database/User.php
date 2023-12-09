@@ -3,13 +3,14 @@
 namespace App\Database;
 
 use Framework\DB;
+use Framework\Query;
 
-class User{
+class User extends Query{
+
+
     static function id($id){
         return DB::queryFirst('SELECT * FROM users WHERE id=:idUser',['idUser'=>$id]);
     }
 
-    static function all(){
-        return DB::query('SELECT * FROM users');
-    }
+
 } 

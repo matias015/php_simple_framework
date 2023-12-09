@@ -59,7 +59,7 @@ class DB{
       $stmt->execute($params);
 
       $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      $result = Item::createCollection($result);
+      // $result = Item::createCollection($result);
 
       DB::disconnect();
 
