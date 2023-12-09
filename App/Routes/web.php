@@ -1,47 +1,30 @@
 <?php
 
 use App\Database\User;
-use App\Request\Val;
+use Framework\DB;
 use Framework\Req;
 use Framework\Response;
 use Framework\Route;
 
-
-
-Route::get('a', function(){
-    Response::view('home');
+Route::get('/',function(){
+    return Response::view('index',['users'=>User::all()]);
 });
 
-Route::get('xd', function(){
-    echo Response::redirect(Req::referer());
+Route::get('/edit/*',function(){
+    $user_id = Route::segment(2);
+    $user = User::id($user_id);
+
+    return Response::view('edit',['user'=>$user]);
 });
 
-Route::post("users/post", function(){
-    Req::deleteEmptyInputs();
+Route::put('/edit/*', function(){
+    $user_id = Route::segment(2);
 
-    $status = Val::start()->rules(function($val){
-        return [
-            $val->maxlen('f1',10,'Este es el mensaje'),
-            $val->maxlen('f2',5,'Este es el mensaje 2')
-        ];
-    });
+    DB::query('UPDATE users SET username = :username, email = :email WHERE id=:userid',[
+        'username'=> Req::post('username'),
+        'email'=> Req::post('email'),
+        'userid' => $user_id
+    ]);
 
-    if($status->success()) echo 'pasoooo';
-});
-
-Route::get('users/*/edit',function(){
-    $userId = Route::segment(2);
-
-    Val::start()->rules(function($val){
-        return [
-            $val->maxlen('f1',10,'Este es el mensaje')
-        ];
-    });
-
-    $user = User::id($userId);
-    print_r($user->email);
-});
-
-Route::get('/path2',function(){
-    echo Route::path();
+    return Response::redirect('/');
 });

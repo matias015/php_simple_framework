@@ -5,7 +5,6 @@ namespace Framework;
 use PDO;
 use Framework\Item;
 
-require_once('config.php');
 
 class DB{
     // PDO instance

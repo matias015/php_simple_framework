@@ -1,5 +1,6 @@
 <?php
 
+require_once('config.php');
 // date_default_timezone_set('America/Argentina/Buenos_Aires');    
 spl_autoload_register(function ($class_name) {
     $base_dir = __DIR__."/";
@@ -16,8 +17,16 @@ spl_autoload_register(function ($class_name) {
     }
 });
 
+if(HIDE_WARNINGS) error_reporting(E_ERROR | E_PARSE);
+
+session_start();
+
 use Framework\Route;
 
 include_once('App/Routes/web.php');
 
-Route::dispatch();
+
+    Route::dispatch();
+
+    
+

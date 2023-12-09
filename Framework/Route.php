@@ -8,6 +8,7 @@ class Route{
 
     // Actual path
     static $currentPath;
+    static $currentMethod;
 
     // Registered routes
     static $registeredRoutes = [
@@ -34,7 +35,13 @@ class Route{
         return Route::getBasePath() . parse_url($path, PHP_URL_PATH);
     }
     
+
+    static function getMethod(){
+        return self::$currentMethod;
+    }
+
     static function method(){
+        if(isset($_POST['_method'])) return $_POST['_method'];
         if(isset($_POST['_method'])){
             return $_POST['_method'];
         }
@@ -94,27 +101,30 @@ class Route{
         $replaced = str_replace('/','\/',$replaced);
     
         $regexp = '/p1\/5\/p2/';
-        $regexp = '/'.$replaced.'/';
-    
+        $regexp = '/^'.$replaced.'$/';
+
         if (preg_match($regexp, self::path(), $matches)) {
            return true;
         } return false;
     }
 
     static function segment($index){
-        return \explode('/',self::path())[$index-1];
+        return \explode('/',self::path())[$index];
     }
 
     static function dispatch(){
         foreach(self::$registeredRoutes[self::method()] as $route){
-            if(Route::RouteMatched($route['path'])) {
+
+            if(Route::RouteMatched($route['path'],'/')) {
                 if(isset($route['mw'])){
                     Middleware::applyMiddlewares($route['mw']);
                 }
                 $route['callback']();
             }
+
         }
     }
 }
 
-Route::$currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),'/');
+Route::$currentMethod = Route::method();
+Route::$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

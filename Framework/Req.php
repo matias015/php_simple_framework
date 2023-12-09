@@ -12,6 +12,14 @@ class Req{
         return htmlspecialchars($_GET[$key]);
     }
 
+    static function postHas($key){
+        return isset($_POST[$key]);
+    }
+
+    static function getHas($key){
+        return isset($_GET[$key]);
+    }
+
     static function any($key){
         if(Route::path() == 'GET') return htmlspecialchars($_GET[$key]);
         else return htmlspecialchars($_POST[$key]);
@@ -31,7 +39,7 @@ class Req{
         return __CLASS__;
     }
 
-    static function referer(){
-        return isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER'] : null;
+    static function referer($cb='/'){
+        return isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER'] : $cb;
     }
 }
