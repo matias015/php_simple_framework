@@ -4,27 +4,46 @@ namespace Framework;
 
 class Req{
 
-
-    static function post($key){
+    /**
+    * Returns the value of given key
+    */
+    static function post($key)
+    {
         return htmlspecialchars($_POST[$key]);
     }
 
-    static function get($key){
+    /**
+    * Returns the value of given key
+    */
+    static function get($key)
+    {
         return htmlspecialchars($_GET[$key]);
     }
 
-    static function postAll(){
+    /**
+    * Returns all post values except the _method input
+    */ 
+    static function post_all()
+    {
         $values = $_POST;
         unset($values['_input']);
         return $values;
     }
-
-    static function getAll(){
+    
+    /**
+    * Returns all get values except the _method input
+    */ 
+    static function get_all()
+    {
         $values = $_GET;
         return $values;
     }
 
-    static function postOnly($asked){
+    /**
+    * Returns only selected values
+    */ 
+    static function post_only($asked)
+    {
         $values = [];
         foreach($_POST as $key => $value){
             if(in_array($key, $asked))
@@ -32,8 +51,12 @@ class Req{
         }
         return $values;
     }
-
-    static function getOnly($asked){
+    
+    /**
+    * Returns only selected values
+    */ 
+    static function get_only($asked)
+    {
         $values = [];
         foreach($_GET as $key => $value){
             if(in_array($key, $asked))
@@ -41,21 +64,37 @@ class Req{
         }
         return $values;
     }
-
-    static function postHas($key){
+    
+    /**
+    * Returns if post has the given key
+    */ 
+    static function post_has($key)
+    {
         return isset($_POST[$key]);
     }
-
-    static function getHas($key){
+    
+    /**
+    * Returns if get has the given key
+    */ 
+    static function get_has($key)
+    {
         return isset($_GET[$key]);
     }
 
-    static function any($key){
+    /**
+    * Returns if any of both has the given key
+    */ 
+    static function any($key)
+    {
         if(Route::path() == 'GET') return htmlspecialchars($_GET[$key]);
         else return htmlspecialchars($_POST[$key]);
     }
 
-    static function trim(){
+    /**
+    * Trims inputs 
+    */ 
+    static function trim()
+    {
         foreach($_POST as $key=>$val){
             $_POST[$key] = trim($val);
         }
@@ -65,7 +104,11 @@ class Req{
         return __CLASS__;
     }
 
-    static function deleteEmptyInputs(){
+    /**
+    * deletes values that are empty
+    */ 
+    static function delete_empty_inputs()
+    {
         foreach($_POST as $key=>$val){
             if(!$val) unset($_POST[$key]);
         }
@@ -74,8 +117,12 @@ class Req{
         }
         return __CLASS__;
     }
-
-    static function referer($cb='/'){
+    
+    /**
+    * Returns the previous path, if it doesn't exists, returns the default 
+    */ 
+    static function referer($cb='/')
+    {
         return isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER'] : $cb;
     }
 }
