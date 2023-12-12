@@ -27,7 +27,7 @@ class Auth{
     /**
      * Returns if the user is logged
      */
-    static function isLogin()
+    static function is_login()
     {
         return isset($_SESSION['user_login_id']);
     }
@@ -35,7 +35,7 @@ class Auth{
     /**
      * Returns if the user is logged as determinated role
      */
-    static function isLoginAs($role)
+    static function is_login_as($role)
     {
         return $_SESSION['user_login_role'] == $role;
     }
@@ -65,12 +65,12 @@ class Auth{
     /**
      * Returns a tokens for remember
      */
-    static function createToken()
+    static function create_token()
     {
         return bin2hex(random_bytes(16));
     }
 
-    static function setRememberToken($table='users'){
+    static function set_remember_token($table='users'){
         self::deleteCookie();
         $token = Auth::createToken();
         setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
@@ -78,29 +78,29 @@ class Auth{
         return __CLASS__;
     }
 
-    static function unsetRememberToken($table='users'){
+    static function unset_remember_token($table='users'){
         DB::query('UPDATE '.$table.' SET remember_token=NULL WHERE id=:userid',['userid'=>self::id()]);
         self::deleteCookie();
         return __CLASS__;
     }
 
-    static function deleteCookie(){
+    static function delete_cookie(){
         setcookie('user_token', '', time()-3600, '/', '', true, true);
         return __CLASS__;
     }
 
-    static function getUserRememberToken($table='users'){
+    static function get_user_remember_token($table='users'){
         $user=DB::queryFirst('SELECT id FROM '.$table.' WHERE id = :iduser',['iduser'=>self::id()]);
         return $user->remember_token;
     }
 
-    static function tryLoginWithCookie($table='users'){
+    static function try_login_with_cookie($table='users'){
         $user = DB::queryFirst('SELECT id FROM '.$table.' WHERE remember_token = :token',['token'=>$_COOKIE['user_token']]);
         self::login($user->id);
         return __CLASS__;
     }
 
-    static function getUserFromDB($table='users',$fields='*'){
+    static function get_user_from_db($table='users',$fields='*'){
         return DB::queryFirst('SELECT '.$fields.' FROM '.$table.' WHERE id=:userid',['userid'=> self::id()]);
     }
 
