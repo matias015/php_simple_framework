@@ -22,7 +22,8 @@ class DB{
 
     // Connect to database, It is done automatically when executing a query
     
-    static function connect(){
+    static function connect()
+    {
       $host = DB::$host;
       $dbname = DB::$dbname;
       $dbdriver = DB::$dbdriver;
@@ -36,13 +37,15 @@ class DB{
 
      // Close the connection to database
      // It is done automatically after query has been executed
-    static function disconnect() {
+    static function disconnect() 
+    {
       DB::$pdo = null;
     }
 
     // query but only getting first element instead of an array of elements
     // returns -> object 
-    static function queryFirst($sql, $params = null){
+    static function query_first($sql, $params = null)
+    {
       $query = DB::query("$sql LIMIT 1",$params);
       
       if(count($query) < 1){
@@ -52,7 +55,8 @@ class DB{
 
     // query getting all element
     // returns -> [object, object, object]
-    static function query($sql, $params = null) {
+    static function query($sql, $params = null) 
+    {
       DB::connect();    
 
       $stmt = DB::$pdo->prepare($sql);
