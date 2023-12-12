@@ -57,7 +57,7 @@ class Auth{
      */
     static function id()
     {
-        return Auth::isLogin()?   
+        return Auth::is_login()?   
             $_SESSION['user_login_id']:
             null;
     }
@@ -71,8 +71,8 @@ class Auth{
     }
 
     static function set_remember_token($table='users'){
-        self::deleteCookie();
-        $token = Auth::createToken();
+        self::delete_cookie();
+        $token = Auth::create_token();
         setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
         DB::query('UPDATE '.$table.' SET remember_token=:token WHERE id=:userid',['token'=>$token,'userid'=>Auth::id()]);
         return __CLASS__;
@@ -80,7 +80,7 @@ class Auth{
 
     static function unset_remember_token($table='users'){
         DB::query('UPDATE '.$table.' SET remember_token=NULL WHERE id=:userid',['userid'=>self::id()]);
-        self::deleteCookie();
+        self::delete_cookie();
         return __CLASS__;
     }
 
@@ -90,18 +90,18 @@ class Auth{
     }
 
     static function get_user_remember_token($table='users'){
-        $user=DB::queryFirst('SELECT id FROM '.$table.' WHERE id = :iduser',['iduser'=>self::id()]);
+        $user=DB::query_first('SELECT id FROM '.$table.' WHERE id = :iduser',['iduser'=>self::id()]);
         return $user->remember_token;
     }
 
     static function try_login_with_cookie($table='users'){
-        $user = DB::queryFirst('SELECT id FROM '.$table.' WHERE remember_token = :token',['token'=>$_COOKIE['user_token']]);
+        $user = DB::query_first('SELECT id FROM '.$table.' WHERE remember_token = :token',['token'=>$_COOKIE['user_token']]);
         self::login($user->id);
         return __CLASS__;
     }
 
     static function get_user_from_db($table='users',$fields='*'){
-        return DB::queryFirst('SELECT '.$fields.' FROM '.$table.' WHERE id=:userid',['userid'=> self::id()]);
+        return DB::query_first('SELECT '.$fields.' FROM '.$table.' WHERE id=:userid',['userid'=> self::id()]);
     }
 
 }
