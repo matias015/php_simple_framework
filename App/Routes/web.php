@@ -10,6 +10,7 @@ use Framework\Route;
 use Framework\Session;
 
 Route::get('/',function(){
+    echo Route::getBasePath();
     $users = DB::query('SELECT * FROM users');
     return Response::view('index',['users'=> $users]);
 });
@@ -44,4 +45,8 @@ Route::put('/edit/*', function(){
     ]);
 
     // return Response::redirect('/');
+});
+
+Route::get('/segment/a/b',function(){
+    echo "el segment es: ".Route::segment(1);
 });
