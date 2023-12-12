@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/edit/<?php echo $user->id ?>" method="post">
+    <form action="/edit/<?php echo $user['id'] ?>" method="post">
         <input type="hidden" value="PUT" name="_method">
         <input name="username" value="<?php echo $user->username ?>">
         <input name="email" value="<?php echo $user->email ?>">

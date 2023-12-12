@@ -2,9 +2,6 @@
 
 namespace Framework\Database;
 
-
-
-
 class Query{
 
 
@@ -21,6 +18,20 @@ class Query{
   
   function select(){
     $this->queryStr = $this->queryStr."SELECT ";
+    return $this;
+  }
+  
+  function update($table, $values){
+    $this->queryStr = $this->queryStr."UPDATE $table SET ";
+
+    foreach($values as $key => $value){
+      $this->queryStr = $this->queryStr."$key = $value, ";
+    }
+    return $this;
+  }
+
+  function set(){
+    $this->queryStr = $this->queryStr." SET ";
     return $this;
   }
   

@@ -7,6 +7,7 @@ class Response{
     static function view($path, $data=[]){
         extract($data);
         include_once('App/Views/'.$path.'.php');
+        exit;
     }
 
     static function setStatusCode($code){
@@ -20,6 +21,7 @@ class Response{
     static function json($data){
         header('Content_Type: application/json');
         echo json_encode($data);
+        exit;
     }
 
     static function redirect($url){

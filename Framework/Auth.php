@@ -2,15 +2,11 @@
 
 namespace Framework;
 
-use Exception;
-
 class Auth{
-
-    static $user_id;
-    static $role;
 
     static function login($id){
         $_SESSION['user_login_id'] = $id;
+        session_regenerate_id();
         return __CLASS__;
     }
 
@@ -19,29 +15,32 @@ class Auth{
         return __CLASS__;
     }
 
-    static function isLogin($role='user'){
+    static function isLogin(){
         return isset($_SESSION['user_login_id']);
-    }
-
-    static function logout($table='users'){
-        unset($_SESSION['user_login_id']);
-        unset($_SESSION['user_login_role']);
     }
 
     static function isLoginAs($role){
         return $_SESSION['user_login_role'] == $role;
     }
 
-    static function id(){
-        return isset($_SESSION['user_login_id'])?$_SESSION['user_login_id']:null;
+    static function logout(){
+        unset($_SESSION['user_login_id']);
+        unset($_SESSION['user_login_role']);
+        session_destroy();
     }
 
-    static function setRememberCookie($table){
+    static function id(){
+        return isset($_SESSION['user_login_id'])?   
+            $_SESSION['user_login_id']:
+            null;
+    }
+
+    static function setRememberCookie($table='users'){
         self::deleteCookie();
         $token = bin2hex(random_bytes(16));
         setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
         DB::query('UPDATE '.$table.' SET remember_token=:token WHERE id=:userid',['token'=>$token,'userid'=>Auth::id()]);
-        return $token;
+        return __CLASS__;
     }
 
     static function unsetRememberCookie($table='users'){
@@ -66,8 +65,8 @@ class Auth{
         return __CLASS__;
     }
 
-    static function getUserFromDB($table='users'){
-        return DB::queryFirst('SELECT * FROM '.$table.' WHERE id=:userid',['userid'=> self::id()]);
+    static function getUserFromDB($table='users',$fields='*'){
+        return DB::queryFirst('SELECT '.$fields.' FROM '.$table.' WHERE id=:userid',['userid'=> self::id()]);
     }
 
 }

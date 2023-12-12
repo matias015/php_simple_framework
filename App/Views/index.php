@@ -8,8 +8,8 @@
 <body>
     <ul>
         <?php foreach($users as $user): ?>
-            <li><?php echo $user->email ?></li>      
-            <a href="/edit/<?php echo $user->id ?>">editar</a>      
+            <li><?php echo $user['email'] ?></li>      
+            <a href="/edit/<?php echo $user['id'] ?>">editar</a>      
         <?php endforeach ?>
     </ul>
 </body>

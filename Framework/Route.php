@@ -29,12 +29,11 @@ class Route{
         return $url[0];
     }
 
-    // Create a route
+    // NO ANDA COMO TAL
     static function route($path){
         $path = trim($path,'/');
         return Route::getBasePath() . parse_url($path, PHP_URL_PATH);
     }
-    
 
     static function getMethod(){
         return self::$currentMethod;
@@ -103,13 +102,13 @@ class Route{
     
         $regexp = '/^'.$replaced.'$/';
 
-        if (preg_match($regexp, self::path(), $matches)) {
+        if (preg_match($regexp, preg_quote(self::path()), $matches)) {
            return true;
         } return false;
     }
 
     static function segment($index){
-        return \explode('/',self::path())[$index];
+        return explode('/',self::path())[$index];
     }
 
     static function dispatch(){

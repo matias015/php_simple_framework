@@ -2,32 +2,27 @@
 
 use App\Database\Post;
 use App\Database\User;
+use Framework\Database\DB;
 use Framework\Database\Item;
 use Framework\Req;
 use Framework\Response;
 use Framework\Route;
+use Framework\Session;
 
 Route::get('/',function(){
-    $users = User::query()
-        -> selectAll()
-        -> from('users')
-        -> exec();
+    $users = DB::query('SELECT * FROM users');
+    return Response::view('index',['users'=> $users]);
+});
 
-    $posts = Post::query()
-        -> selectAll()
-        -> from('posts')
-        -> exec();
+Route::get('/session', function(){
+    Session::set('xd','2');
+    echo Session::get('xd');
+    Session::unset('xd');
+    echo Session::get('xd');
+});
 
-    
-    print_r($users);
-    print_r($posts);
-    echo '<br><br><br>';
-    $final = Item::unifyMany($users,$posts,'id_user','posts');
-    foreach($final as $user){
-        print_r($user);
-        echo '<br><br>';
-    }
-    
+Route::get('/path', function(){
+    echo Route::route('xd/2');
 });
 
 Route::get('/edit/*',function(){
@@ -39,12 +34,14 @@ Route::get('/edit/*',function(){
 
 Route::put('/edit/*', function(){
     $user_id = Route::segment(2);
-
+    
+    Session::set('previuous', Req::postAll());
+   
     DB::query('UPDATE users SET username = :username, email = :email WHERE id=:userid',[
         'username'=> Req::post('username'),
         'email'=> Req::post('email'),
         'userid' => $user_id
     ]);
 
-    return Response::redirect('/');
+    // return Response::redirect('/');
 });
