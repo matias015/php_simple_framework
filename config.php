@@ -25,3 +25,7 @@ define('MAIL_PASSWORD','fa016bcca8a71c');
 define('MAIL_PORT',25 ); 
 
 define('HIDE_WARNINGS',true);
+
+define('COOKIE_APP_DOMAIN','/');
+define('COOKIE_SECURE',true);
+define('COOKIE_HTTP_ONLY',true);
