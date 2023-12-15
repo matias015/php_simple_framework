@@ -6,6 +6,8 @@ define('AUTH_TABLE_NAME','alumnos');
 define('AUTH_ID_NAME','id_alumno');
 define('AUTH_TABLE_TOKENS_NAME','user_tokens');
 
+
+define('COOKIE_APP_DOMAIN','/');
 define('COOKIE_EXPIRATION_TIME','+2 day');
 define('SECURE_COOKIES', true);
 define('HTTP_COOKIES_ONLY', true);
@@ -26,6 +28,3 @@ define('MAIL_PORT',25 );
 
 define('HIDE_WARNINGS',true);
 
-define('COOKIE_APP_DOMAIN','/');
-define('COOKIE_SECURE',true);
-define('COOKIE_HTTP_ONLY',true);
