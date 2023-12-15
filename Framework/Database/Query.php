@@ -112,45 +112,6 @@ class Query{
     return DB::query($this->queryStr,$this->args);
   }
   
-//   function with($fields, $table, $prefix){
-//     $this->andFiels($fields,$prefix);
-//     $this->join($table, 
-//   }
-    
   
 } 
-
-
-// User::query()
-//   -> select()
-//   -> fields(['username', 'email'])
-//   -> andFiels(Post::fiels(), 'post')
-//   -> from('users')
-//   -> join('posts', 'users.id','posts.id_user')
-//   -> where('users.username = :name)
-//   -> args(['name'=>$username])
-  
-  
-// User::query()
-//   -> select(User::fields)
-//   -> with(Post::fields,'post')
-  
-  
-  
-// class User{
-
-//   static $fields = []
-  
-//   static $relations = [
-//     "posts"=> [Post::class, 'id_
-//   ]
-
-// }
-
-// User::query
-//   -> all()
-//   -> where(...)
-//   -> args(...)
-//   -> get()
-  
 

@@ -3,8 +3,6 @@
 namespace Framework\Database;
 
 use PDO;
-use Framework\Item;
-
 
 class DB{
     // PDO instance

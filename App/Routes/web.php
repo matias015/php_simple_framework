@@ -10,20 +10,19 @@ use Framework\Route;
 use Framework\Session;
 
 Route::get('/',function(){
-    echo Route::getBasePath();
     $users = DB::query('SELECT * FROM users');
     return Response::view('index',['users'=> $users]);
 });
 
 Route::get('/session', function(){
-    Session::set('xd','2');
-    echo Session::get('xd');
-    Session::unset('xd');
-    echo Session::get('xd');
+    Session::set('test','2');
+    echo Session::get('test');
+    Session::unset('test');
+    echo Session::get('test');
 });
 
 Route::get('/path', function(){
-    echo Route::route('xd/2');
+
 });
 
 Route::get('/edit/*',function(){
@@ -36,7 +35,7 @@ Route::get('/edit/*',function(){
 Route::put('/edit/*', function(){
     $user_id = Route::segment(2);
     
-    Session::set('previuous', Req::postAll());
+    Session::set('previuous', Req::post_all());
    
     DB::query('UPDATE users SET username = :username, email = :email WHERE id=:userid',[
         'username'=> Req::post('username'),
@@ -48,5 +47,5 @@ Route::put('/edit/*', function(){
 });
 
 Route::get('/segment/a/b',function(){
-    echo "el segment es: ".Route::segment(1);
+    echo "el segment es: " . Route::segment(1);
 });
