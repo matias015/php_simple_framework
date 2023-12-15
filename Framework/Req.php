@@ -2,14 +2,30 @@
 
 namespace Framework;
 
+use Framework\Route;
+
 class Req{
+
+    static $post = null;
+    static $get = null;
+
+    /**
+     * 
+     */
+    static function load_request_inputs()
+    {
+        if(Route::path() === 'GET')
+            Req::$get = filter_input_array(INPUT_GET,FILTER_SANITIZE_SPECIAL_CHARS);
+        else
+            Req::$post = filter_input_array(INPUT_POST,FILTER_SANITIZE_SPECIAL_CHARS);
+    }
 
     /**
     * Returns the value of given key
     */
     static function post($key)
     {
-        return htmlspecialchars($_POST[$key]);
+        return Req::$post[$key];
     }
 
     /**
@@ -17,7 +33,7 @@ class Req{
     */
     static function get($key)
     {
-        return htmlspecialchars($_GET[$key]);
+        return Req::$get[$key];
     }
 
     /**
@@ -25,7 +41,7 @@ class Req{
     */ 
     static function post_all()
     {
-        $values = $_POST;
+        $values = Req::$post;
         unset($values['_input']);
         return $values;
     }
@@ -35,8 +51,7 @@ class Req{
     */ 
     static function get_all()
     {
-        $values = $_GET;
-        return $values;
+        return Req::$post;
     }
 
     /**
@@ -45,7 +60,7 @@ class Req{
     static function post_only($asked)
     {
         $values = [];
-        foreach($_POST as $key => $value){
+        foreach(Req::$post as $key => $value){
             if(in_array($key, $asked))
                 $values[$key] = $value;
         }
@@ -58,7 +73,7 @@ class Req{
     static function get_only($asked)
     {
         $values = [];
-        foreach($_GET as $key => $value){
+        foreach(Req::$get as $key => $value){
             if(in_array($key, $asked))
                 $values[$key] = $value;
         }
@@ -70,7 +85,7 @@ class Req{
     */ 
     static function post_has($key)
     {
-        return isset($_POST[$key]);
+        return isset(Req::$post[$key]);
     }
     
     /**
@@ -78,7 +93,7 @@ class Req{
     */ 
     static function get_has($key)
     {
-        return isset($_GET[$key]);
+        return isset(Req::$get[$key]);
     }
 
     /**
@@ -86,8 +101,10 @@ class Req{
     */ 
     static function any($key)
     {
-        if(Route::path() == 'GET') return htmlspecialchars($_GET[$key]);
-        else return htmlspecialchars($_POST[$key]);
+        if(Route::path() == 'GET') 
+            return Req::$get[$key];
+        else
+            return Req::$post[$key];
     }
 
     /**
@@ -95,11 +112,11 @@ class Req{
     */ 
     static function trim()
     {
-        foreach($_POST as $key=>$val){
-            $_POST[$key] = trim($val);
+        foreach(Req::$post as $key=>$val){
+            Req::$post[$key] = trim($val);
         }
-        foreach($_GET as $key=>$val){
-            $_GET[$key] = trim($val);
+        foreach(Req::$get as $key=>$val){
+            Req::$get[$key] = trim($val);
         }
         return __CLASS__;
     }
@@ -113,7 +130,7 @@ class Req{
             if(!$val) unset($_POST[$key]);
         }
         foreach($_GET as $key=>$val){
-            if(!$val) unset($_GET[$key]);
+            if(!$val) unset(Req::$get[$key]);
         }
         return __CLASS__;
     }
@@ -126,3 +143,5 @@ class Req{
         return isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER'] : $cb;
     }
 }
+
+Req::load_request_inputs();
