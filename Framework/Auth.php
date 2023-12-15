@@ -2,6 +2,8 @@
 
 namespace Framework;
 
+use Framework\Database\DB;
+
 class Auth{
 
     /**
@@ -70,10 +72,18 @@ class Auth{
         return bin2hex(random_bytes(16));
     }
 
+    /**
+     * Create the cookie for remember and set into the database
+     */
     static function set_remember_token($table='users'){
+        // Delete token if exists
         self::delete_cookie();
+
         $token = Auth::create_token();
+        
+        
         setcookie('user_token', $token, time()+ strtotime(COOKIE_EXPIRATION_TIME), '/', '', true, true);
+        
         DB::query('UPDATE '.$table.' SET remember_token=:token WHERE id=:userid',['token'=>$token,'userid'=>Auth::id()]);
         return __CLASS__;
     }
