@@ -19,7 +19,7 @@ class Cookie
 
   static function exists($key)
   {
-      return isset(&_COOKIE[$key]);
+      return isset($_COOKIE[$key]);
   }
   
   static function get($key)
