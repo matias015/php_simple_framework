@@ -1,8 +1,5 @@
 <?php
-
 namespace Framework;
-
-use COM;
 
 class Cookie
 {
@@ -36,6 +33,5 @@ class Cookie
       return base64_decode($valor_cookie);
   } 
 
-  
 }
   

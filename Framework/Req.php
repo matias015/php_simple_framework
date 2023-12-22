@@ -10,17 +10,6 @@ class Req{
     static $get = null;
 
     /**
-     * 
-     */
-    static function load_request_inputs()
-    {
-        if(Route::path() === 'GET')
-            Req::$get = filter_input_array(INPUT_GET,FILTER_SANITIZE_SPECIAL_CHARS);
-        else
-            Req::$post = filter_input_array(INPUT_POST,FILTER_SANITIZE_SPECIAL_CHARS);
-    }
-
-    /**
     * Returns the value of given key
     */
     static function post($key)
@@ -39,38 +28,40 @@ class Req{
     /**
     * Returns all post values except the _method input
     */ 
-    static function post_all()
+    static function postAll()
     {
         $values = Req::$post;
         unset($values['_input']);
-        return $values;
+        return (object) $values;
     }
     
     /**
     * Returns all get values except the _method input
     */ 
-    static function get_all()
+    static function getAll()
     {
-        return Req::$post;
+        return (object) Req::$post;
     }
 
     /**
     * Returns only selected values
     */ 
-    static function post_only($asked)
+    static function postOnly($asked)
     {
         $values = [];
+
         foreach(Req::$post as $key => $value){
             if(in_array($key, $asked))
                 $values[$key] = $value;
         }
+
         return $values;
     }
     
     /**
     * Returns only selected values
     */ 
-    static function get_only($asked)
+    static function getOnly($asked)
     {
         $values = [];
         foreach(Req::$get as $key => $value){
@@ -83,7 +74,7 @@ class Req{
     /**
     * Returns if post has the given key
     */ 
-    static function post_has($key)
+    static function postHas($key)
     {
         return isset(Req::$post[$key]);
     }
@@ -91,7 +82,7 @@ class Req{
     /**
     * Returns if get has the given key
     */ 
-    static function get_has($key)
+    static function getHas($key)
     {
         return isset(Req::$get[$key]);
     }
@@ -118,13 +109,12 @@ class Req{
         foreach(Req::$get as $key=>$val){
             Req::$get[$key] = trim($val);
         }
-        return __CLASS__;
     }
 
     /**
     * deletes values that are empty
     */ 
-    static function delete_empty_inputs()
+    static function deleteEmptyInputs()
     {
         foreach($_POST as $key=>$val){
             if(!$val) unset($_POST[$key]);
@@ -132,7 +122,6 @@ class Req{
         foreach($_GET as $key=>$val){
             if(!$val) unset(Req::$get[$key]);
         }
-        return __CLASS__;
     }
     
     /**
@@ -144,4 +133,7 @@ class Req{
     }
 }
 
-Req::load_request_inputs();
+if(Route::path() === 'GET')
+    Req::$get = filter_input_array(INPUT_GET,FILTER_SANITIZE_SPECIAL_CHARS);
+else
+    Req::$post = filter_input_array(INPUT_POST,FILTER_SANITIZE_SPECIAL_CHARS);

@@ -1,5 +1,20 @@
 <?php
 
+function d($data, $tabs=0){
+    if(is_array($data)){
+        echo '<br>';
+        foreach($data as $key => $item){
+            for($i=0;$i<=$tabs;$i++){echo '----- ';}
+            echo $key;
+            echo ' => ';
+            d($item, $tabs+1);
+        }
+    }else{
+        echo $data . '<br>';
+    }
+
+}
+
 require_once('config.php');
 
 spl_autoload_register(function ($class_name) {

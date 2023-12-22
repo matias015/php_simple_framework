@@ -6,7 +6,10 @@ class Response{
 
     static function view($path, $data=[]){
         extract($data);
+
+        $errors = isset($_SESSION['EV_VALIDATION_ERRORS']) ? Session::getAndDelete('EV_VALIDATION_ERRORS') : null;
         include_once('App/Views/'.$path.'.php');
+        
         exit;
     }
 
