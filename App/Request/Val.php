@@ -6,15 +6,13 @@ use Framework\Validator;
 
 class Val extends Validator{
 
-    public function adulto(){
-        if($this->value < 18){
-            $this->addError('adulto');
+    public function my_custom_validation(){
+        if('pass'){
+            return;
+        }else {
+            $this->addError('my_custom_validation');
         }
+        
     }
 
-    public function genero($arg){
-        if($this->value == $arg){
-            $this->addError('genero',[$arg]);
-        }
-    }
 }
