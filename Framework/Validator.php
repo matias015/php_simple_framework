@@ -1,6 +1,7 @@
 <?php
 namespace Framework;
 
+use App\Request\Val;
 use App\Request\ValidationMessages;
 
 class Validator{
@@ -25,7 +26,7 @@ class Validator{
      */
    static function start($fields)
    {
-        $validator = new Validator();
+        $validator = new Val();
         
         foreach($fields as $name => $fieldRules){
             $validator->name = $name;

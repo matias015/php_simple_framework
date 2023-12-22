@@ -15,7 +15,7 @@ Route::get('/a', function(){
     echo 6;
 
     Val::start([
-        'name'=>['required','maxlen:16','minlen:6']
+        'name'=>['adulto']
     ]);
 
     d(Session::getAndDelete('EV_VALIDATION_ERRORS'));
