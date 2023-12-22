@@ -6,10 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" action="/form">
-        <input name="username">
-        <?= (isset($errors['username'])) ? $errors['username'] : '' ?>
-        <button>adwd</button>
-    </form>
+    <h1>404</h1>
 </body>
 </html>

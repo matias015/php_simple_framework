@@ -29,14 +29,14 @@ class Validator{
         $validator = new Val();
         
         foreach($fields as $name => $fieldRules){
-            $validator->name = $name;
+            $validator->setName($name);
             
             if(isset($_POST[$name]))
-                $validator->value = $_POST[$name];
+                $validator->setValue($_POST[$name]);
             else if(isset($_GET[$name]))
-                $validator->value = $_GET[$name];
+                $validator->setValue($_GET[$name]);
             else
-                $validator->value = null;
+                $validator->setValue(null);
             
             foreach($fieldRules as $rule){
                 $exploded = explode(':', $rule);
@@ -47,29 +47,49 @@ class Validator{
             
         }
 
-        if(!empty($validator->errors)){
+        if($validator->hasErrors()){
             $_SESSION['EV_VALIDATION_ERRORS']=$validator->errors;
+            Response::redirect(Req::referer());
         }
 
+        return $validator;
     }
     
-    public function getErrorMessage($rule){
+    public function setValue($value){
+        $this->value = $value;
+    }
+
+    public function setName($name){
+        $this->name = $name;
+    }
+
+    public function hasErrors()
+    {
+        return (!(empty($this->errors)));
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    private function getErrorMessage($rule){
         return ValidationMessages::$ev_app_error_messages['es'][$rule];
     }
 
-    public function getAlias(){
+    private function getAlias(){
         return isset(ValidationMessages::$ev_app_error_aliases['es'][$this->name]) ?
             ValidationMessages::$ev_app_error_aliases['es'][$this->name] : $this->name;
     }
 
-    public function getProcesedErrorMessage($rule){
+    private function getProcesedErrorMessage($rule){
         $alias = $this->getAlias();
         $message = $this->getErrorMessage($rule);
         
         return str_replace(':@', $alias, $message);
     }
 
-    public function insertExtraData($array, $message){
+    private function insertExtraData($array, $message){
         foreach($array as $index => $value){
             $message = str_replace(':arg'.$index, $value, $message);
         }

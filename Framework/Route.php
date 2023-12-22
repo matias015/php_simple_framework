@@ -20,6 +20,8 @@ class Route{
         'PUT' => []
     ];
 
+    static $fallbackCallback;
+
     static function getCurrentRequestData()
     {
         Route::$currentMethod = Route::getMethod();
@@ -119,6 +121,10 @@ class Route{
             Route::$registeredRoutes['PUT'][]=$route;
     }
 
+    static function fallback($cb){
+        Route::$fallbackCallback = $cb;
+    }
+
     /*
      * Test if a path matches with the current
      */
@@ -131,6 +137,7 @@ class Route{
         else return false;
     }
 
+    
     /*
      * Get a segment of the current path
      */
@@ -148,9 +155,24 @@ class Route{
             if(Route::RouteMatched($route['path'])) {
                 if(isset($route['mw'])) Middleware::applyMiddlewares($route['mw']);
                 $route['callback']();
+                exit;
             }
-
         }
+        
+        // \print_r(2);
+        if(Route::$fallbackCallback){
+            return (Route::$fallbackCallback)();
+        }else{
+            return Response::view('erros/404');
+        }
+        //     
+        
+        // 
+        
+            // print_r(3);
+    
+        
+
     }
 }
 
